@@ -1,4 +1,4 @@
-# Household Meal Planner
+﻿# Household Meal Planner
 
 Mobile-first household meal planner scaffold for the MVP.
 
@@ -11,6 +11,14 @@ Mobile-first household meal planner scaffold for the MVP.
 - Mobile navigation shell
 - Basic loading and error states
 - Basic PWA manifest and icons
+
+## Phase 2 Includes
+
+- Supabase-ready PostgreSQL schema migrations
+- Household bootstrap on first auth signup
+- Row Level Security policies for household-owned data
+- Development seed data for a demo household
+- Typed database model for future Supabase client usage
 
 ## Getting Started
 
@@ -52,5 +60,6 @@ Mobile-first household meal planner scaffold for the MVP.
 
 - The homepage redirects to `/dashboard`.
 - Missing Supabase environment variables show a clear setup warning in the app shell.
-- Supabase auth, database models, and real CRUD flows are planned for the next phase.
-
+- The schema lives in `supabase/migrations/`.
+- Development seed data lives in `supabase/seed.sql`.
+- The first auth signup automatically creates a household and profile.

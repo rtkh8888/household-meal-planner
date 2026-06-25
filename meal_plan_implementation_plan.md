@@ -512,16 +512,16 @@ For MVP:
 ## Tasks
 
 - [ ] Create Supabase project.
-- [ ] Create migration files.
-- [ ] Create all tables.
-- [ ] Add updated_at trigger function.
-- [ ] Add constraints.
-- [ ] Add indexes for common lookups.
-- [ ] Enable RLS on household-owned tables.
-- [ ] Add basic household ownership policies.
-- [ ] Create seed data for development.
-- [ ] Add TypeScript database types if using Supabase type generation.
-- [ ] Document schema in README.
+- [x] Create migration files.
+- [x] Create all tables.
+- [x] Add updated_at trigger function.
+- [x] Add constraints.
+- [x] Add indexes for common lookups.
+- [x] Enable RLS on household-owned tables.
+- [x] Add basic household ownership policies.
+- [x] Create seed data for development.
+- [x] Add TypeScript database types if using Supabase type generation.
+- [x] Document schema in README.
 
 ## Testing Plan
 
@@ -1484,3 +1484,4 @@ The MVP is successful when this full scenario works:
 ```
 
 When this scenario works end-to-end, the MVP is complete.
+
