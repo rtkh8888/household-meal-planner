@@ -10,6 +10,28 @@ begin
 end;
 $$;
 
+
+
+create table if not exists public.households (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  default_people_per_meal integer not null default 2,
+  default_leftover_enabled boolean not null default true,
+  created_by uuid not null references auth.users (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint households_default_people_per_meal_check check (default_people_per_meal > 0),
+  constraint households_created_by_unique unique (created_by)
+);
+
+create table if not exists public.profiles (
+  id uuid primary key references auth.users (id) on delete cascade,
+  household_id uuid not null references public.households (id) on delete cascade,
+  display_name text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create or replace function public.current_household_id()
 returns uuid
 language sql
@@ -59,26 +81,6 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
 after insert on auth.users
 for each row execute function public.handle_new_user();
-
-create table if not exists public.households (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  default_people_per_meal integer not null default 2,
-  default_leftover_enabled boolean not null default true,
-  created_by uuid not null references auth.users (id) on delete cascade,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  constraint households_default_people_per_meal_check check (default_people_per_meal > 0),
-  constraint households_created_by_unique unique (created_by)
-);
-
-create table if not exists public.profiles (
-  id uuid primary key references auth.users (id) on delete cascade,
-  household_id uuid not null references public.households (id) on delete cascade,
-  display_name text,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
 
 create table if not exists public.dishes (
   id uuid primary key default gen_random_uuid(),
@@ -420,4 +422,5 @@ drop trigger if exists set_grocery_items_updated_at on public.grocery_items;
 create trigger set_grocery_items_updated_at
 before update on public.grocery_items
 for each row execute function public.set_updated_at();
+
 

@@ -525,15 +525,15 @@ For MVP:
 
 ## Testing Plan
 
-- [ ] Migrations run successfully.
-- [ ] Seed data inserts successfully.
-- [ ] Tables appear correctly in Supabase.
-- [ ] Foreign key constraints work.
-- [ ] Deleting a dish deletes related dish ingredients.
-- [ ] Deleting a meal combo deletes related combo-dish rows.
+- [x] Migrations run successfully.
+- [x] Seed data inserts successfully.
+- [x] Tables appear correctly in Supabase.
+- [x] Foreign key constraints work.
+- [x] Deleting a dish deletes related dish ingredients.
+- [x] Deleting a meal combo deletes related combo-dish rows.
 - [ ] Deleting a plan week deletes related meal slots and grocery list.
-- [ ] RLS prevents unauthenticated data access.
-- [ ] Authenticated user can access own household data.
+- [x] RLS prevents unauthenticated data access.
+- [x] Authenticated user can access own household data.
 - [ ] Authenticated user cannot access another household’s data.
 
 ## Completion Criteria
@@ -1484,4 +1484,6 @@ The MVP is successful when this full scenario works:
 ```
 
 When this scenario works end-to-end, the MVP is complete.
+
+
 

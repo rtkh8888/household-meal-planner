@@ -1,3 +1,4 @@
+﻿import Link from 'next/link';
 import { AppShell } from '@/components/layout/app-shell';
 import { PageSection } from '@/components/layout/page-section';
 
@@ -21,8 +22,19 @@ export default function SettingsPage() {
             and deployed to Vercel.
           </p>
         </PageSection>
+
+        <PageSection eyebrow="Diagnostics" title="RLS test helper">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Use the diagnostic page to confirm the current session and household-scoped access.
+          </p>
+          <Link
+            href="/settings/rls-debug"
+            className="mt-4 inline-flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          >
+            Open RLS debug
+          </Link>
+        </PageSection>
       </div>
     </AppShell>
   );
 }
-
