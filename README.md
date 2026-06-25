@@ -1,4 +1,4 @@
-﻿# Household Meal Planner
+# Household Meal Planner
 
 Mobile-first household meal planner scaffold for the MVP.
 
@@ -19,7 +19,7 @@ Mobile-first household meal planner scaffold for the MVP.
 - Row Level Security policies for household-owned data
 - Development seed data for a demo household
 - Typed database model for future Supabase client usage
-
+- Phase 2 smoke test plan in `supabase/phase2_smoke_test_plan.md`
 ## Getting Started
 
 1. Install dependencies:
@@ -63,3 +63,6 @@ Mobile-first household meal planner scaffold for the MVP.
 - The schema lives in `supabase/migrations/`.
 - Development seed data lives in `supabase/seed.sql`.
 - The first auth signup automatically creates a household and profile.
+
+
+
