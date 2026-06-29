@@ -1,4 +1,4 @@
-# Household Meal Planner
+﻿# Household Meal Planner
 
 Mobile-first household meal planner scaffold for the MVP.
 
@@ -20,6 +20,7 @@ Mobile-first household meal planner scaffold for the MVP.
 - Development seed data for a demo household
 - Typed database model for future Supabase client usage
 - Phase 2 smoke test plan in `supabase/phase2_smoke_test_plan.md`
+
 ## Getting Started
 
 1. Install dependencies:
@@ -39,7 +40,11 @@ Mobile-first household meal planner scaffold for the MVP.
    ```text
    NEXT_PUBLIC_SUPABASE_URL=
    NEXT_PUBLIC_SUPABASE_ANON_KEY=
+   NEXT_PUBLIC_APP_URL=
    ```
+
+   Use `NEXT_PUBLIC_APP_URL` for the real URL that should receive auth confirmation and magic-link callbacks.
+   Examples: `https://your-app.vercel.app` or your LAN/tunnel URL, not `http://localhost:3000` when confirming on another device.
 
 4. Start the dev server:
 
@@ -59,10 +64,8 @@ Mobile-first household meal planner scaffold for the MVP.
 ## Notes
 
 - The homepage redirects to `/dashboard`.
-- Missing Supabase environment variables show a clear setup warning in the app shell.
+- Missing Supabase environment variables show a clear developer error.
 - The schema lives in `supabase/migrations/`.
 - Development seed data lives in `supabase/seed.sql`.
 - The first auth signup automatically creates a household and profile.
-
-
-
+- In Supabase Auth settings, add your callback URL to Redirect URLs, for example `https://your-app.vercel.app/auth/callback`.

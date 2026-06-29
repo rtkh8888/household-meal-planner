@@ -1,4 +1,4 @@
-# Household Meal Planner App — Implementation Plan
+# Household Meal Planner App ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Implementation Plan
 
 ## 0. Product Summary
 
@@ -24,7 +24,7 @@ The MVP is for private household use first, but the codebase should be structure
 The app should use this model:
 
 ```text
-Dish → Meal Combo → Cook Batch → Meal Slot → Grocery List
+Dish ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Meal Combo ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Cook Batch ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Meal Slot ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Grocery List
 ```
 
 ## Example Household Workflow
@@ -148,7 +148,7 @@ meal-planner-app/
 
 ---
 
-# Phase 1 — Project Setup
+# Phase 1 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Project Setup
 
 ## Goal
 
@@ -203,7 +203,7 @@ Phase is complete when the app runs locally, has a clean mobile-first shell, and
 
 ---
 
-# Phase 2 — Supabase Schema + Database Foundation
+# Phase 2 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Supabase Schema + Database Foundation
 
 ## Goal
 
@@ -534,7 +534,7 @@ For MVP:
 - [ ] Deleting a plan week deletes related meal slots and grocery list.
 - [x] RLS prevents unauthenticated data access.
 - [x] Authenticated user can access own household data.
-- [ ] Authenticated user cannot access another household’s data.
+- [ ] Authenticated user cannot access another householdÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s data.
 
 ## Completion Criteria
 
@@ -542,7 +542,7 @@ Phase is complete when database schema is ready, seed data exists, and basic hou
 
 ---
 
-# Phase 3 — Auth + Household Initialization
+# Phase 3 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Auth + Household Initialization
 
 ## Goal
 
@@ -555,35 +555,35 @@ Use email/password or magic link.
 Recommended MVP:
 
 ```text
-Login → create profile if missing → create household if missing → redirect to dashboard
+Login ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ create profile if missing ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ create household if missing ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ redirect to dashboard
 ```
 
 ## Tasks
 
-- [ ] Build login page.
-- [ ] Add Supabase auth client.
-- [ ] Add server/client auth helpers.
-- [ ] Protect app routes.
-- [ ] Redirect unauthenticated users to login.
-- [ ] Create onboarding logic for first login.
-- [ ] Create default household.
-- [ ] Create default profile.
-- [ ] Store household ID in profile.
-- [ ] Add logout button.
-- [ ] Add basic settings page to show household settings.
-- [ ] Allow editing household name.
-- [ ] Allow editing default people per meal.
-- [ ] Allow editing default leftover setting.
+- [x] Build login page.
+- [x] Add Supabase auth client.
+- [x] Add server/client auth helpers.
+- [x] Protect app routes.
+- [x] Redirect unauthenticated users to login.
+- [x] Create onboarding logic for first login.
+- [x] Create default household.
+- [x] Create default profile.
+- [x] Store household ID in profile.
+- [x] Add logout button.
+- [x] Add basic settings page to show household settings.
+- [x] Allow editing household name.
+- [x] Allow editing default people per meal.
+- [x] Allow editing default leftover setting.
 
 ## Testing Plan
 
 - [ ] New user can sign up.
-- [ ] Existing user can log in.
-- [ ] User can log out.
-- [ ] Protected pages redirect when logged out.
-- [ ] First login creates household and profile.
+- [x] Existing user can log in.
+- [x] User can log out.
+- [x] Protected pages redirect when logged out.
+- [x] First login creates household and profile.
 - [ ] Returning login does not duplicate household/profile.
-- [ ] Household settings load correctly.
+- [x] Household settings load correctly.
 - [ ] Household settings update correctly.
 - [ ] App does not crash if profile is missing.
 - [ ] App shows helpful error if Supabase auth fails.
@@ -594,7 +594,7 @@ Phase is complete when a user can log in, access the app, and has a usable house
 
 ---
 
-# Phase 4 — Dish Library
+# Phase 4 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Dish Library
 
 ## Goal
 
@@ -634,54 +634,53 @@ Dish form:
 ## Ingredient Type Behavior
 
 ```text
-grocery → included in grocery list
-pantry → excluded from grocery list by default
-optional → excluded from grocery list by default
+grocery ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ included in grocery list
+pantry ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ excluded from grocery list by default
+optional ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ excluded from grocery list by default
 ```
 
 ## Tasks
 
-- [ ] Build dish list page.
-- [ ] Build add dish form.
-- [ ] Build edit dish form.
-- [ ] Build delete dish action.
-- [ ] Build ingredient add/remove UI.
-- [ ] Add ingredient type selector.
-- [ ] Add dish category selector.
-- [ ] Add search by dish name.
-- [ ] Add filter by category.
-- [ ] Add empty state.
-- [ ] Add loading state.
-- [ ] Add error state.
-- [ ] Add confirmation before deleting dish.
-- [ ] Prevent creating dish with empty name.
-- [ ] Prevent creating duplicate empty ingredients.
-- [ ] Trim whitespace from ingredient names.
+- [x] Build dish list page.
+- [x] Build add dish form.
+- [x] Build edit dish form.
+- [x] Build delete dish action.
+- [x] Build ingredient add/remove UI.
+- [x] Add ingredient type selector.
+- [x] Add dish category selector.
+- [x] Add search by dish name.
+- [x] Add filter by category.
+- [x] Add empty state.
+- [x] Add loading state.
+- [x] Add error state.
+- [x] Add confirmation before deleting dish.
+- [x] Prevent creating dish with empty name.
+- [x] Prevent creating duplicate empty ingredients.
+- [x] Trim whitespace from ingredient names.
 
 ## Testing Plan
 
-- [ ] User can create dish with ingredients.
-- [ ] User can create dish without instructions.
-- [ ] User cannot create dish without name.
-- [ ] User can mark ingredient as pantry.
-- [ ] User can mark ingredient as grocery.
-- [ ] User can edit dish name.
-- [ ] User can edit ingredient list.
-- [ ] User can delete ingredient.
-- [ ] User can delete dish.
-- [ ] Search returns expected dishes.
-- [ ] Category filter works.
-- [ ] Empty state appears when no dishes exist.
-- [ ] Long dish names do not break mobile UI.
-- [ ] RLS prevents access to another household’s dishes.
-
+- [x] User can create dish with ingredients.
+- [x] User can create dish without instructions.
+- [x] User cannot create dish without name.
+- [x] User can mark ingredient as pantry.
+- [x] User can mark ingredient as grocery.
+- [x] User can edit dish name.
+- [x] User can edit ingredient list.
+- [x] User can delete ingredient.
+- [x] User can delete dish.
+- [x] Search returns expected dishes.
+- [x] Category filter works.
+- [x] Empty state appears when no dishes exist.
+- [x] Long dish names do not break mobile UI.
+- [ ] RLS prevents access to another household's dishes.
 ## Completion Criteria
 
 Phase is complete when dishes can be fully created, edited, searched, filtered, and deleted.
 
 ---
 
-# Phase 5 — Meal Combo Builder
+# Phase 5 Meal Combo Builder
 
 ## Goal
 
@@ -748,8 +747,8 @@ Meal combo form:
 - [ ] User can delete combo.
 - [ ] Deleted combo does not delete original dishes.
 - [ ] Combo list displays dish names correctly.
-- [ ] Mobile UI handles 3–5 dishes per combo.
-- [ ] RLS prevents access to another household’s combos.
+- [ ] Mobile UI handles 3ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“5 dishes per combo.
+- [ ] RLS prevents access to another householdÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s combos.
 
 ## Completion Criteria
 
@@ -757,7 +756,7 @@ Phase is complete when users can create and manage reusable meal combos.
 
 ---
 
-# Phase 6 — Weekly Planner + Cook Batch + Leftovers
+# Phase 6 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Weekly Planner + Cook Batch + Leftovers
 
 ## Goal
 
@@ -783,7 +782,7 @@ When user adds a meal:
 
 ## Default Household Logic
 
-For this user’s household:
+For this userÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s household:
 
 ```text
 default_people_per_meal = 2
@@ -899,9 +898,9 @@ createCookMealWithOptionalLeftover(input)
 Suggested next meal slot logic:
 
 ```text
-breakfast → lunch same day
-lunch → dinner same day
-dinner → lunch next day
+breakfast ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ lunch same day
+lunch ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ dinner same day
+dinner ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ lunch next day
 ```
 
 For this household, dinner should default to next day lunch.
@@ -946,7 +945,7 @@ For this household, dinner should default to next day lunch.
 - [ ] Planner displays meal combo dishes correctly.
 - [ ] Planner handles empty days.
 - [ ] Planner works on mobile viewport.
-- [ ] RLS prevents access to another household’s planner data.
+- [ ] RLS prevents access to another householdÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s planner data.
 
 ## Completion Criteria
 
@@ -954,7 +953,7 @@ Phase is complete when weekly planning supports cooked meals and linked leftover
 
 ---
 
-# Phase 7 — Grocery List Generation
+# Phase 7 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Grocery List Generation
 
 ## Goal
 
@@ -979,9 +978,9 @@ leftover meal slots
 ## Ingredient Inclusion Rule
 
 ```text
-grocery ingredients → include
-pantry ingredients → exclude from main grocery list
-optional ingredients → exclude from main grocery list
+grocery ingredients ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ include
+pantry ingredients ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ exclude from main grocery list
+optional ingredients ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ exclude from main grocery list
 ```
 
 ## Pantry Reference Section
@@ -1041,10 +1040,10 @@ Broccoli
 
 ## Regeneration Behavior
 
-When user clicks “Generate Grocery List”:
+When user clicks ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œGenerate Grocery ListÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â:
 
 - Get all cook batches for the selected week.
-- Get all dishes in each batch’s meal combo.
+- Get all dishes in each batchÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s meal combo.
 - Get all ingredients for those dishes.
 - Include grocery ingredients.
 - Exclude pantry and optional ingredients.
@@ -1103,7 +1102,7 @@ Grocery page:
 - [ ] Deleted generated item behavior is acceptable for MVP.
 - [ ] Empty plan shows empty grocery state.
 - [ ] Grocery list works on mobile.
-- [ ] RLS prevents access to another household’s grocery list.
+- [ ] RLS prevents access to another householdÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s grocery list.
 
 ## Completion Criteria
 
@@ -1111,7 +1110,7 @@ Phase is complete when the grocery list accurately reflects cooked meals only an
 
 ---
 
-# Phase 8 — Dashboard + User Experience Polish
+# Phase 8 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Dashboard + User Experience Polish
 
 ## Goal
 
@@ -1120,8 +1119,8 @@ Make the app feel usable as a real household tool.
 ## Dashboard Should Show
 
 - Current week summary
-- Today’s meals
-- Tomorrow’s planned meals
+- TodayÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s meals
+- TomorrowÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s planned meals
 - Quick actions:
   - Add dish
   - Add meal combo
@@ -1141,8 +1140,8 @@ Make the app feel usable as a real household tool.
 ## Tasks
 
 - [ ] Build dashboard page.
-- [ ] Show today’s meals.
-- [ ] Show tomorrow’s meals.
+- [ ] Show todayÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s meals.
+- [ ] Show tomorrowÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s meals.
 - [ ] Show current week planned meal count.
 - [ ] Add quick action buttons.
 - [ ] Improve empty states across app.
@@ -1157,8 +1156,8 @@ Make the app feel usable as a real household tool.
 
 - [ ] Dashboard loads without planned meals.
 - [ ] Dashboard loads with planned meals.
-- [ ] Today’s meals are accurate.
-- [ ] Tomorrow’s meals are accurate.
+- [ ] TodayÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s meals are accurate.
+- [ ] TomorrowÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s meals are accurate.
 - [ ] Quick action buttons navigate correctly.
 - [ ] Empty states are helpful.
 - [ ] Toasts appear after successful actions.
@@ -1172,7 +1171,7 @@ Phase is complete when the app feels usable for daily household planning.
 
 ---
 
-# Phase 9 — PWA + Mobile Installability
+# Phase 9 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â PWA + Mobile Installability
 
 ## Goal
 
@@ -1222,7 +1221,7 @@ Phase is complete when the app can be used like a lightweight mobile app from th
 
 ---
 
-# Phase 10 — Deployment
+# Phase 10 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Deployment
 
 ## Goal
 
@@ -1264,7 +1263,7 @@ Phase is complete when the app is live, secure, and usable from phone/laptop.
 
 ---
 
-# Phase 11 — Portfolio Readiness
+# Phase 11 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Portfolio Readiness
 
 ## Goal
 
@@ -1337,7 +1336,7 @@ Phase is complete when the project is polished enough to show on GitHub or discu
 
 ---
 
-# Phase 12 — Future Public App Readiness
+# Phase 12 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Future Public App Readiness
 
 Do not build these in MVP unless specifically requested later.
 

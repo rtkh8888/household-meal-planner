@@ -1,5 +1,8 @@
+﻿'use client';
+
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { LogoutButton } from '@/components/auth/logout-button';
 import { mainNavItems } from '@/lib/navigation';
 import { getSupabaseStatus } from '@/lib/supabase/client';
 
@@ -32,6 +35,7 @@ export function AppShell({ title, description, children }: AppShellProps) {
                 {item.shortLabel}
               </Link>
             ))}
+            <LogoutButton />
           </div>
         </div>
       </header>
@@ -72,4 +76,3 @@ export function AppShell({ title, description, children }: AppShellProps) {
     </div>
   );
 }
-
