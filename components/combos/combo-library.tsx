@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
+import { ToastMessage } from '@/components/ui/toast-message';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { Database } from '@/types/database';
 
@@ -338,8 +339,6 @@ export function ComboLibrary() {
           <p className="mt-4 text-sm leading-6 text-muted-foreground">
             Use combos for repeatable plates like dinner for two, batch-cook sets, or easy leftover-friendly meal bundles.
           </p>
-
-          {formMessage ? <p className="mt-4 text-sm text-primary">{formMessage}</p> : null}
           {loadError ? <p className="mt-4 text-sm text-danger">{loadError}</p> : null}
           {noDishesYet ? (
             <div className="mt-5 rounded-3xl border border-dashed border-border bg-muted/35 p-5 text-sm leading-6 text-muted-foreground">
@@ -595,6 +594,8 @@ export function ComboLibrary() {
           ))}
         </div>
       )}
+
+      {formMessage ? <ToastMessage message={formMessage} onDismiss={() => setFormMessage(null)} /> : null}
     </div>
   );
 }

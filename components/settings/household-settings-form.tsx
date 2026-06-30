@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useMemo, useState, type FormEvent } from 'react';
+import { ToastMessage } from '@/components/ui/toast-message';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 type HouseholdSettingsFormProps = {
@@ -127,9 +128,10 @@ export function HouseholdSettingsForm({
         >
           {isSaving ? 'Saving...' : 'Save settings'}
         </button>
-        {message ? <p className="text-sm text-primary">{message}</p> : null}
         {error ? <p className="text-sm text-danger">{error}</p> : null}
       </div>
+
+      {message ? <ToastMessage message={message} onDismiss={() => setMessage(null)} /> : null}
     </form>
   );
 }

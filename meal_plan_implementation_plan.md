@@ -1139,29 +1139,29 @@ Make the app feel usable as a real household tool.
 
 ## Tasks
 
-- [ ] Build dashboard page.
-- [ ] Show today's meals.
-- [ ] Show tomorrow's meals.
-- [ ] Show current week planned meal count.
-- [ ] Add quick action buttons.
-- [ ] Improve empty states across app.
-- [ ] Add confirmation dialog for destructive actions.
-- [ ] Add toast notifications.
-- [ ] Improve mobile layout.
-- [ ] Improve form validation messages.
-- [ ] Add app title and favicon.
-- [ ] Add basic app icon assets.
+- [x] Build dashboard page.
+- [x] Show today's meals.
+- [x] Show tomorrow's meals.
+- [x] Show current week planned meal count.
+- [x] Add quick action buttons.
+- [x] Improve empty states across app.
+- [x] Add confirmation dialog for destructive actions.
+- [x] Add toast notifications.
+- [x] Improve mobile layout.
+- [x] Improve form validation messages.
+- [x] Add app title and favicon.
+- [x] Add basic app icon assets.
 
 ## Testing Plan
 
-- [ ] Dashboard loads without planned meals.
-- [ ] Dashboard loads with planned meals.
-- [ ] Today's meals are accurate.
-- [ ] Tomorrow's meals are accurate.
-- [ ] Quick action buttons navigate correctly.
-- [ ] Empty states are helpful.
-- [ ] Toasts appear after successful actions.
-- [ ] Delete confirmations appear before deletion.
+- [x] Dashboard loads without planned meals.
+- [x] Dashboard loads with planned meals.
+- [x] Today's meals are accurate.
+- [x] Tomorrow's meals are accurate.
+- [x] Quick action buttons navigate correctly.
+- [x] Empty states are helpful.
+- [x] Toasts appear after successful actions.
+- [x] Delete confirmations appear before deletion.
 - [ ] Mobile UI is usable with one hand.
 - [ ] No horizontal scrolling on mobile.
 

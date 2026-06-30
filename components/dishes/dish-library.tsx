@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { ToastMessage } from '@/components/ui/toast-message';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { Database } from '@/types/database';
 
@@ -443,8 +444,6 @@ export function DishLibrary() {
               </select>
             </label>
           </div>
-
-          {formMessage ? <p className="mt-4 text-sm text-primary">{formMessage}</p> : null}
           {loadError ? <p className="mt-4 text-sm text-danger">{loadError}</p> : null}
         </div>
 
@@ -761,6 +760,8 @@ export function DishLibrary() {
           })}
         </div>
       )}
+
+      {formMessage ? <ToastMessage message={formMessage} onDismiss={() => setFormMessage(null)} /> : null}
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { PageSection } from '@/components/layout/page-section';
+import { ToastMessage } from '@/components/ui/toast-message';
 import {
   formatWeekRange,
   getWeekStart,
@@ -66,14 +67,6 @@ export function GroceryBoard() {
     void loadWeekData(weekStartDate);
   }, [weekStartDate]);
 
-  useEffect(() => {
-    if (!toastMessage) {
-      return;
-    }
-
-    const timeout = window.setTimeout(() => setToastMessage(null), 2800);
-    return () => window.clearTimeout(timeout);
-  }, [toastMessage]);
 
   const totalMainItems = data?.mainItems.length ?? 0;
   const totalPantryItems = data?.pantryItems.length ?? 0;
@@ -712,12 +705,7 @@ export function GroceryBoard() {
           </div>
         )}
       </PageSection>
-
-      {toastMessage ? (
-        <div className="fixed inset-x-4 bottom-24 z-40 mx-auto max-w-sm rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-950 shadow-soft md:inset-x-auto md:right-6 md:bottom-6">
-          {toastMessage}
-        </div>
-      ) : null}
+      {toastMessage ? <ToastMessage message={toastMessage} onDismiss={() => setToastMessage(null)} /> : null}
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
+import { ToastMessage } from '@/components/ui/toast-message';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import {
   calculateLeftoverPortions,
@@ -975,9 +976,7 @@ export function PlannerBoard() {
               </button>
             </div>
           </div>
-        </div>
-
-        {message ? <p className="mt-4 text-sm text-primary">{message}</p> : null}
+        </div>
         {data.dishes.length === 0 ? (
           <div className="mt-5 rounded-3xl border border-dashed border-border bg-muted/35 p-5 text-sm leading-6 text-muted-foreground">
             Add dishes before planning the week.
@@ -1381,18 +1380,8 @@ export function PlannerBoard() {
           </div>
         </div>
       ) : null}
+
+      {message ? <ToastMessage message={message} onDismiss={() => setMessage(null)} /> : null}
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
