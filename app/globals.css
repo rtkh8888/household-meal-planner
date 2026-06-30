@@ -3,22 +3,28 @@
 @tailwind utilities;
 
 :root {
-  --background: 338 100% 98%;
-  --foreground: 335 8% 18%;
-  --card: 338 100% 99%;
-  --card-foreground: 335 8% 18%;
-  --muted: 334 30% 95%;
-  --muted-foreground: 336 8% 46%;
-  --border: 330 26% 88%;
-  --primary: 343 74% 82%;
-  --primary-foreground: 335 18% 18%;
-  --secondary: 147 31% 78%;
-  --secondary-foreground: 335 18% 18%;
-  --accent: 260 60% 88%;
-  --accent-foreground: 335 18% 18%;
-  --cream: 42 100% 92%;
-  --cream-foreground: 335 18% 18%;
+  --background: 230 40% 98%;
+  --foreground: 300 4% 18%;
+  --card: 0 0% 100%;
+  --card-foreground: 300 4% 18%;
+  --muted: 275 20% 96%;
+  --muted-foreground: 286 6% 44%;
+  --border: 278 18% 90%;
+  --primary: 338 70% 82%;
+  --primary-foreground: 300 4% 18%;
+  --secondary: 138 40% 85%;
+  --secondary-foreground: 300 4% 18%;
+  --accent: 50 78% 84%;
+  --accent-foreground: 300 4% 18%;
   --danger: 348 58% 63%;
+  --lavender: 259 64% 89%;
+  --lavender-foreground: 300 4% 18%;
+  --peach: 26 100% 88%;
+  --peach-foreground: 300 4% 18%;
+  --lime: 96 48% 86%;
+  --lime-foreground: 300 4% 18%;
+  --rose-soft: 338 66% 90%;
+  --rose-soft-foreground: 300 4% 18%;
 }
 
 * {
@@ -26,7 +32,7 @@
 }
 
 html {
-  background: #fff7fa;
+  background: #fafbfd;
 }
 
 body {
@@ -34,10 +40,11 @@ body {
   min-height: 100vh;
   color: hsl(var(--foreground));
   background:
-    radial-gradient(circle at 15% 20%, rgba(244, 175, 192, 0.2), transparent 28%),
-    radial-gradient(circle at 85% 10%, rgba(191, 220, 203, 0.18), transparent 30%),
-    radial-gradient(circle at 70% 80%, rgba(220, 210, 243, 0.16), transparent 28%),
-    linear-gradient(135deg, #fff7fa 0%, #fff9f5 45%, #f7fbf8 100%);
+    radial-gradient(circle at 14% 18%, rgba(220, 207, 252, 0.34), transparent 18%),
+    radial-gradient(circle at 82% 14%, rgba(217, 241, 216, 0.42), transparent 20%),
+    radial-gradient(circle at 68% 78%, rgba(255, 221, 191, 0.4), transparent 19%),
+    radial-gradient(circle at 20% 80%, rgba(246, 214, 227, 0.28), transparent 18%),
+    linear-gradient(135deg, #fcfcfd 0%, #fafbff 55%, #f8fcf8 100%);
   font-family:
     'Inter',
     'Nunito Sans',
@@ -55,10 +62,14 @@ body::before {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.065;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 88' fill='none'%3E%3Cg stroke='%23e6c7d4' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M24 43c0-10.5 8.5-19 19-19s19 8.5 19 19'/%3E%3Cpath d='M21 45h46c0 10.7-10 19-23 19s-23-8.3-23-19Z'/%3E%3Cpath d='M33 20c2.2 3 2.2 6.2 0 8.2'/%3E%3Cpath d='M43 16c2.6 3.2 2.6 6.8 0 9.3'/%3E%3Cpath d='M53 20c2.2 3 2.2 6.2 0 8.2'/%3E%3C/g%3E%3Cg fill='%23cfe6da' opacity='0.35'%3E%3Ccircle cx='64' cy='25' r='2.2'/%3E%3Ccircle cx='28' cy='68' r='1.9'/%3E%3Ccircle cx='72' cy='68' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 188px 188px;
-  background-position: center top;
+  opacity: 0.05;
+  background-image:
+    radial-gradient(circle at 16% 22%, rgba(220, 207, 252, 0.7) 0 9px, transparent 10px),
+    radial-gradient(circle at 76% 18%, rgba(217, 241, 216, 0.7) 0 10px, transparent 11px),
+    radial-gradient(circle at 30% 72%, rgba(255, 221, 191, 0.8) 0 9px, transparent 10px),
+    radial-gradient(circle at 84% 70%, rgba(246, 214, 227, 0.75) 0 10px, transparent 11px),
+    radial-gradient(circle at 52% 44%, rgba(248, 237, 184, 0.6) 0 7px, transparent 8px);
+  background-size: 240px 240px;
   background-repeat: repeat;
 }
 
@@ -68,12 +79,13 @@ a {
 }
 
 ::selection {
-  background: rgba(244, 175, 192, 0.24);
+  background: rgba(220, 207, 252, 0.3);
 }
 
 .bg-shell {
   background-image:
-    radial-gradient(circle at top left, rgba(244, 175, 192, 0.15), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(191, 220, 203, 0.14), transparent 30%),
-    radial-gradient(circle at center right, rgba(220, 210, 243, 0.12), transparent 28%);
+    radial-gradient(circle at top left, rgba(220, 207, 252, 0.18), transparent 32%),
+    radial-gradient(circle at top right, rgba(217, 241, 216, 0.18), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(255, 221, 191, 0.18), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(246, 214, 227, 0.16), transparent 28%);
 }

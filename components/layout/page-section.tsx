@@ -10,7 +10,7 @@ export function PageSection({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-[1.75rem] border border-[#eadde2] bg-[rgba(255,252,253,0.95)] p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)] backdrop-blur-sm sm:p-6">
+    <section className="rounded-[1.75rem] border border-border bg-white/95 p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)] backdrop-blur-sm sm:p-6">
       <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
         {eyebrow}
       </p>

@@ -22,8 +22,14 @@ const config: Config = {
         'secondary-foreground': 'hsl(var(--secondary-foreground))',
         accent: 'hsl(var(--accent))',
         'accent-foreground': 'hsl(var(--accent-foreground))',
-        cream: 'hsl(var(--cream))',
-        'cream-foreground': 'hsl(var(--cream-foreground))',
+        lavender: 'hsl(var(--lavender))',
+        'lavender-foreground': 'hsl(var(--lavender-foreground))',
+        peach: 'hsl(var(--peach))',
+        'peach-foreground': 'hsl(var(--peach-foreground))',
+        lime: 'hsl(var(--lime))',
+        'lime-foreground': 'hsl(var(--lime-foreground))',
+        'rose-soft': 'hsl(var(--rose-soft))',
+        'rose-soft-foreground': 'hsl(var(--rose-soft-foreground))',
         danger: 'hsl(var(--danger))'
       },
       boxShadow: {
@@ -31,7 +37,7 @@ const config: Config = {
       },
       backgroundImage: {
         'shell-radial':
-          'radial-gradient(circle at top left, rgba(244, 175, 192, 0.15), transparent 35%), radial-gradient(circle at bottom right, rgba(191, 220, 203, 0.14), transparent 30%), radial-gradient(circle at center right, rgba(220, 210, 243, 0.12), transparent 28%)'
+          'radial-gradient(circle at top left, rgba(220, 207, 252, 0.18), transparent 32%), radial-gradient(circle at top right, rgba(217, 241, 216, 0.18), transparent 30%), radial-gradient(circle at bottom left, rgba(255, 221, 191, 0.18), transparent 28%), radial-gradient(circle at bottom right, rgba(246, 214, 227, 0.16), transparent 28%)'
       }
     }
   },

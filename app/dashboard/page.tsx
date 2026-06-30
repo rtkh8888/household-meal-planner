@@ -20,6 +20,14 @@ type DashboardMealSlot = MealSlotRow & {
   portionsCooked: number | null;
 };
 
+type DashboardStat = {
+  label: string;
+  value: string;
+  hint: string;
+  tintClass: string;
+  dotClass: string;
+};
+
 const MEAL_TYPE_ORDER = {
   breakfast: 0,
   lunch: 1,
@@ -192,7 +200,7 @@ function DashboardMealList({
   return (
     <PageSection eyebrow={title} title={dateLabel}>
       {slots.length === 0 ? (
-        <div className="rounded-[1.5rem] border border-dashed border-[#eadde2] bg-white/85 p-5 text-sm leading-6 text-muted-foreground">
+        <div className="rounded-[1.5rem] border border-dashed border-border bg-white/85 p-5 text-sm leading-6 text-muted-foreground">
           {emptyMessage}
         </div>
       ) : (
@@ -200,11 +208,11 @@ function DashboardMealList({
           {slots.map((slot) => (
             <article
               key={slot.id}
-              className="rounded-[1.5rem] border border-[#eadde2] bg-white/94 p-4 shadow-[0_10px_22px_rgba(90,60,70,0.05)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(90,60,70,0.08)]"
+              className="rounded-[1.5rem] border border-border bg-white/96 p-4 shadow-[0_10px_22px_rgba(90,60,70,0.05)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(90,60,70,0.08)]"
             >
               <div className="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 <span>{toTitleCase(slot.meal_type)}</span>
-                <span className="rounded-full border border-secondary/30 bg-secondary/20 px-3 py-1 tracking-[0.14em] text-foreground">
+                <span className="rounded-full border border-lime/50 bg-lime/55 px-3 py-1 tracking-[0.14em] text-foreground">
                   {slot.entry_type === 'cook' ? 'Cook' : 'Leftover'}
                 </span>
               </div>
@@ -220,7 +228,7 @@ function DashboardMealList({
                   {slot.dishNames.map((dishName) => (
                     <span
                       key={`${slot.id}-${dishName}`}
-                      className="rounded-full border border-[#eadde2] bg-[rgba(255,247,250,0.95)] px-3 py-2 text-xs font-medium text-foreground"
+                      className="rounded-full border border-border bg-[rgba(255,255,255,0.98)] px-3 py-2 text-xs font-medium text-foreground"
                     >
                       {dishName}
                     </span>
@@ -237,7 +245,7 @@ function DashboardMealList({
 
 function DashboardHeroIcon() {
   return (
-    <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] border border-primary/25 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,175,192,0.22))] shadow-[0_12px_24px_rgba(90,60,70,0.08)]">
+    <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(220,207,252,0.3))] shadow-[0_12px_24px_rgba(90,60,70,0.08)]">
       <svg viewBox="0 0 48 48" className="h-8 w-8 text-primary" fill="none" aria-hidden="true">
         <path
           d="M14.5 24.5C14.5 17.6 19.8 12 26.4 12c4.8 0 8.9 2.9 10.8 7"
@@ -423,30 +431,34 @@ export default async function DashboardPage() {
   const cookedMealCount = weekSlots.filter((slot) => slot.entry_type === 'cook').length;
   const leftoverMealCount = weekSlots.filter((slot) => slot.entry_type === 'leftover').length;
 
-  const stats = [
+  const stats: DashboardStat[] = [
     {
       label: 'Dishes',
       value: String(dishCountResult.count ?? 0),
       hint: 'Household library ready to plan from',
-      accent: 'bg-primary/15'
+      tintClass: 'bg-lavender/65',
+      dotClass: 'bg-lavender'
     },
     {
       label: 'Combos',
       value: String(comboCountResult.count ?? 0),
       hint: 'Optional reusable meal bundles',
-      accent: 'bg-secondary/20'
+      tintClass: 'bg-secondary/55',
+      dotClass: 'bg-secondary'
     },
     {
       label: 'Planned meals',
       value: String(weeklyPlannedMeals),
       hint: `${cookedMealCount} cook, ${leftoverMealCount} leftover this week`,
-      accent: 'bg-accent/25'
+      tintClass: 'bg-accent/65',
+      dotClass: 'bg-accent'
     },
     {
       label: 'Groceries',
       value: String(groceryItemCount),
       hint: 'Main grocery items for this week',
-      accent: 'bg-cream/50'
+      tintClass: 'bg-peach/70',
+      dotClass: 'bg-peach'
     }
   ];
 
@@ -456,16 +468,18 @@ export default async function DashboardPage() {
       description="A calm home base for your household meal library, weekly plan, leftovers, and grocery flow."
     >
       <div className="space-y-5 lg:space-y-6">
-        <section className="overflow-hidden rounded-[2rem] border border-[#eadde2] bg-[linear-gradient(135deg,rgba(255,247,250,0.98),rgba(255,249,245,0.95),rgba(247,251,248,0.96))] shadow-[0_12px_32px_rgba(90,60,70,0.06)]">
-          <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="p-5 sm:p-6 lg:p-7">
+        <section className="relative overflow-hidden rounded-[2rem] border border-border bg-white/96 shadow-[0_12px_32px_rgba(90,60,70,0.06)]">
+          <div className="absolute -right-14 -top-14 h-40 w-40 rounded-full bg-lavender/35 blur-3xl" />
+          <div className="absolute -left-10 bottom-[-3rem] h-36 w-36 rounded-full bg-secondary/30 blur-3xl" />
+          <div className="grid gap-0 lg:grid-cols-[1.08fr_0.92fr]">
+            <div className="relative p-5 sm:p-6 lg:p-7">
               <div className="flex items-center gap-3">
                 <DashboardHeroIcon />
                 <div>
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                     This week
                   </p>
-                  <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[2.2rem] sm:leading-tight">
+                  <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[2.15rem] sm:leading-tight">
                     Your household is set for {getWeekRangeLabel(weekStartDate)}
                   </h2>
                 </div>
@@ -477,33 +491,37 @@ export default async function DashboardPage() {
               </p>
 
               <div className="mt-6 flex flex-wrap gap-2">
-                <span className="rounded-full border border-primary/25 bg-primary/18 px-4 py-2 text-sm font-medium text-foreground">
+                <span className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_18px_rgba(90,60,70,0.05)]">
                   {household.default_people_per_meal} people per meal
                 </span>
-                <span className="rounded-full border border-secondary/30 bg-secondary/18 px-4 py-2 text-sm font-medium text-foreground">
+                <span className="rounded-full border border-secondary/40 bg-secondary/28 px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_18px_rgba(90,60,70,0.04)]">
                   Leftovers {household.default_leftover_enabled ? 'on' : 'off'}
                 </span>
-                <span className="rounded-full border border-accent/40 bg-accent/28 px-4 py-2 text-sm font-medium text-foreground">
+                <span className="rounded-full border border-lavender/50 bg-lavender/55 px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_18px_rgba(90,60,70,0.04)]">
                   {getWeekRangeLabel(weekStartDate)}
+                </span>
+                <span className="rounded-full border border-accent/40 bg-accent/55 px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_18px_rgba(90,60,70,0.04)]">
+                  {household.name || 'Home'}
                 </span>
               </div>
             </div>
 
-            <div className="border-t border-[#eadde2] bg-[rgba(255,252,253,0.78)] p-5 sm:p-6 lg:border-l lg:border-t-0 lg:p-7">
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+            <div className="border-t border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(252,252,253,0.92))] p-5 sm:p-6 lg:border-l lg:border-t-0 lg:p-7">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {stats.map((stat) => (
                   <div
                     key={stat.label}
-                    className="rounded-[1.5rem] border border-[#eadde2] bg-white/92 p-4 shadow-[0_8px_20px_rgba(90,60,70,0.05)]"
+                    className={`relative overflow-hidden rounded-[1.6rem] border border-border p-4 shadow-[0_10px_22px_rgba(90,60,70,0.05)] ${stat.tintClass}`}
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                        {stat.label}
-                      </p>
-                      <span className={`h-3.5 w-3.5 rounded-full ${stat.accent}`} />
-                    </div>
+                    <div className="absolute right-3 top-3 h-10 w-10 rounded-full bg-white/45 blur-[1px]" />
+                    <div className={`h-2.5 w-2.5 rounded-full ${stat.dotClass}`} />
+                    <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-foreground/70">
+                      {stat.label}
+                    </p>
                     <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">{stat.value}</p>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{stat.hint}</p>
+                    <p className="mt-2 max-w-[14rem] text-sm leading-6 text-foreground/70">
+                      {stat.hint}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -528,7 +546,7 @@ export default async function DashboardPage() {
 
         <PageSection eyebrow="Household defaults" title="Planner behavior at a glance">
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[1.5rem] border border-[#eadde2] bg-primary/12 p-4">
+            <div className="rounded-[1.5rem] border border-border bg-lavender/35 p-4">
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                 Default people per meal
               </p>
@@ -536,7 +554,7 @@ export default async function DashboardPage() {
                 {household.default_people_per_meal}
               </p>
             </div>
-            <div className="rounded-[1.5rem] border border-[#eadde2] bg-secondary/14 p-4">
+            <div className="rounded-[1.5rem] border border-border bg-secondary/32 p-4">
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                 Leftovers by default
               </p>
@@ -551,7 +569,7 @@ export default async function DashboardPage() {
           <div className="mt-4">
             <Link
               href="/settings"
-              className="inline-flex rounded-full border border-[#eadde2] bg-white/94 px-4 py-3 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_12px_22px_rgba(90,60,70,0.08)]"
+              className="inline-flex rounded-full border border-border bg-white px-4 py-3 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-lavender/50 hover:shadow-[0_12px_22px_rgba(90,60,70,0.08)]"
             >
               Open settings
             </Link>

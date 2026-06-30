@@ -17,7 +17,7 @@ type AppShellProps = {
 
 function MealPlannerLogo() {
   return (
-    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-primary/25 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,175,192,0.22))] shadow-[0_10px_22px_rgba(90,60,70,0.08)]">
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(220,207,252,0.32))] shadow-[0_12px_24px_rgba(90,60,70,0.08)]">
       <svg viewBox="0 0 48 48" className="h-7 w-7 text-primary" fill="none" aria-hidden="true">
         <path
           d="M14.5 24.5C14.5 17.6 19.8 12 26.4 12c4.8 0 8.9 2.9 10.8 7"
@@ -67,8 +67,8 @@ function NavPill({
         compact ? 'px-3 py-2 text-xs' : ''
       } ${
         active
-          ? 'border-primary/35 bg-primary/18 text-foreground shadow-[0_10px_22px_rgba(244,175,192,0.2)]'
-          : 'border-border/80 bg-white/85 text-muted-foreground hover:-translate-y-0.5 hover:border-primary/25 hover:bg-white hover:text-foreground hover:shadow-[0_12px_24px_rgba(90,60,70,0.08)]'
+          ? 'border-lavender/80 bg-lavender/55 text-foreground shadow-[0_10px_22px_rgba(90,60,70,0.08)]'
+          : 'border-border bg-white/90 text-muted-foreground hover:-translate-y-0.5 hover:border-lavender/40 hover:bg-white hover:text-foreground hover:shadow-[0_12px_24px_rgba(90,60,70,0.07)]'
       }`}
     >
       {compact ? shortLabel : label}
@@ -76,13 +76,16 @@ function NavPill({
   );
 }
 
-export function AppShell({ title, description, children }: AppShellProps) {
+export function AppShell(props: AppShellProps) {
+  const { title, children } = props;
+  void props.description;
+
   const pathname = usePathname();
   const supabaseStatus = getSupabaseStatus();
 
   return (
     <div className="min-h-screen bg-shell text-foreground">
-      <header className="sticky top-0 z-20 border-b border-[#eadde2] bg-[rgba(255,249,250,0.9)] backdrop-blur-md">
+      <header className="sticky top-0 z-20 border-b border-border bg-[rgba(255,255,255,0.88)] backdrop-blur-md">
         <div className="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-3">
@@ -94,9 +97,6 @@ export function AppShell({ title, description, children }: AppShellProps) {
                 <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[2rem]">
                   {title}
                 </h1>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-[0.95rem]">
-                  {description}
-                </p>
               </div>
             </div>
 
@@ -112,8 +112,8 @@ export function AppShell({ title, description, children }: AppShellProps) {
                   />
                 ))}
               </nav>
-              <div className="ml-1 border-l border-[#eadde2] pl-3">
-                <LogoutButton className="border-[#eadde2] bg-white/90 px-4 py-2 text-sm text-muted-foreground shadow-none hover:border-primary/25 hover:text-foreground" />
+              <div className="ml-1 border-l border-border pl-3">
+                <LogoutButton className="border-border bg-white/90 px-4 py-2 text-sm text-muted-foreground shadow-none hover:border-lavender/40 hover:text-foreground" />
               </div>
             </div>
           </div>
@@ -135,33 +135,28 @@ export function AppShell({ title, description, children }: AppShellProps) {
               <p className="text-xs leading-5 text-muted-foreground">
                 Keep the whole household moving from one cozy workspace.
               </p>
-              <LogoutButton className="border-[#eadde2] bg-white/85 px-3 py-2 text-xs text-muted-foreground shadow-none hover:border-primary/25 hover:text-foreground" />
+              <LogoutButton className="border-border bg-white/90 px-3 py-2 text-xs text-muted-foreground shadow-none hover:border-lavender/40 hover:text-foreground" />
             </div>
           </div>
         </div>
       </header>
 
       <main className="mx-auto w-full max-w-[1200px] px-4 py-5 pb-28 sm:px-6 lg:px-8 lg:py-8">
-        <section className="rounded-[2rem] border border-[#eadde2] bg-white/90 p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)] backdrop-blur-sm sm:p-6 lg:p-7">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-sm leading-6 text-muted-foreground">{description}</p>
+        <section className="rounded-[2rem] border border-border bg-white/92 p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)] backdrop-blur-sm sm:p-6 lg:p-7">
+          {!supabaseStatus.ready ? (
+            <div className="mb-6 rounded-[1.25rem] border border-[#ece8f0] bg-white px-4 py-3 text-sm text-foreground shadow-[0_8px_20px_rgba(90,60,70,0.05)]">
+              <p className="font-semibold">Developer setup needed</p>
+              <p className="mt-1 text-muted-foreground">
+                Missing: {supabaseStatus.missing.join(', ')}. Copy `.env.local.example` to
+                `.env.local`.
+              </p>
             </div>
-            {!supabaseStatus.ready ? (
-              <div className="rounded-[1.25rem] border border-[rgba(244,175,192,0.35)] bg-[rgba(255,247,250,0.95)] px-4 py-3 text-sm text-foreground shadow-[0_8px_20px_rgba(90,60,70,0.05)]">
-                <p className="font-semibold">Developer setup needed</p>
-                <p className="mt-1 text-muted-foreground">
-                  Missing: {supabaseStatus.missing.join(', ')}. Copy `.env.local.example` to
-                  `.env.local`.
-                </p>
-              </div>
-            ) : null}
-          </div>
-          <div className="mt-6">{children}</div>
+          ) : null}
+          <div>{children}</div>
         </section>
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-[#eadde2] bg-[rgba(255,249,250,0.96)] px-2 py-2 backdrop-blur-md lg:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-[rgba(255,255,255,0.94)] px-2 py-2 backdrop-blur-md lg:hidden">
         <div className="mx-auto grid max-w-[1200px] grid-cols-5 gap-2">
           {mobileNavItems.map((item) => (
             <Link
@@ -170,8 +165,8 @@ export function AppShell({ title, description, children }: AppShellProps) {
               aria-current={pathname === item.href || pathname.startsWith(`${item.href}/`) ? 'page' : undefined}
               className={`rounded-[1.15rem] border px-2 py-3 text-center text-[0.72rem] font-semibold leading-none transition ${
                 pathname === item.href || pathname.startsWith(`${item.href}/`)
-                  ? 'border-primary/35 bg-primary/18 text-foreground shadow-[0_8px_18px_rgba(244,175,192,0.16)]'
-                  : 'border-[#eadde2] bg-white/92 text-muted-foreground'
+                  ? 'border-lavender/80 bg-lavender/55 text-foreground shadow-[0_8px_18px_rgba(220,207,252,0.2)]'
+                  : 'border-border bg-white/96 text-muted-foreground'
               }`}
             >
               {item.shortLabel}
