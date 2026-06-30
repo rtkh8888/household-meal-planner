@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
 import { PageSection } from '@/components/layout/page-section';
@@ -86,7 +86,10 @@ async function enrichSlots(
   const comboIds = Array.from(
     new Set(
       slots
-        .map((slot) => slot.meal_combo_id ?? (slot.cook_batch_id ? cookBatchMap.get(slot.cook_batch_id)?.meal_combo_id ?? null : null))
+        .map((slot) =>
+          slot.meal_combo_id ??
+          (slot.cook_batch_id ? cookBatchMap.get(slot.cook_batch_id)?.meal_combo_id ?? null : null)
+        )
         .filter(Boolean)
     )
   ) as string[];
@@ -189,20 +192,25 @@ function DashboardMealList({
   return (
     <PageSection eyebrow={title} title={dateLabel}>
       {slots.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-border bg-muted/30 p-5 text-sm leading-6 text-muted-foreground">
+        <div className="rounded-[1.5rem] border border-dashed border-[#eadde2] bg-white/85 p-5 text-sm leading-6 text-muted-foreground">
           {emptyMessage}
         </div>
       ) : (
         <div className="space-y-3">
           {slots.map((slot) => (
-            <article key={slot.id} className="rounded-3xl border border-border bg-white p-4 shadow-soft">
-              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            <article
+              key={slot.id}
+              className="rounded-[1.5rem] border border-[#eadde2] bg-white/94 p-4 shadow-[0_10px_22px_rgba(90,60,70,0.05)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(90,60,70,0.08)]"
+            >
+              <div className="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 <span>{toTitleCase(slot.meal_type)}</span>
-                <span className="rounded-full bg-muted px-3 py-1 tracking-[0.16em] text-foreground">
+                <span className="rounded-full border border-secondary/30 bg-secondary/20 px-3 py-1 tracking-[0.14em] text-foreground">
                   {slot.entry_type === 'cook' ? 'Cook' : 'Leftover'}
                 </span>
               </div>
-              <h3 className="mt-3 text-lg font-semibold text-foreground">{slot.comboName}</h3>
+              <h3 className="mt-3 text-lg font-semibold tracking-tight text-foreground">
+                {slot.comboName}
+              </h3>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Portions eaten: {slot.portions_eaten}
                 {slot.portionsCooked ? ` of ${slot.portionsCooked} cooked` : ''}
@@ -212,7 +220,7 @@ function DashboardMealList({
                   {slot.dishNames.map((dishName) => (
                     <span
                       key={`${slot.id}-${dishName}`}
-                      className="rounded-full bg-muted px-3 py-2 text-xs font-semibold text-foreground"
+                      className="rounded-full border border-[#eadde2] bg-[rgba(255,247,250,0.95)] px-3 py-2 text-xs font-medium text-foreground"
                     >
                       {dishName}
                     </span>
@@ -224,6 +232,37 @@ function DashboardMealList({
         </div>
       )}
     </PageSection>
+  );
+}
+
+function DashboardHeroIcon() {
+  return (
+    <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] border border-primary/25 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,175,192,0.22))] shadow-[0_12px_24px_rgba(90,60,70,0.08)]">
+      <svg viewBox="0 0 48 48" className="h-8 w-8 text-primary" fill="none" aria-hidden="true">
+        <path
+          d="M14.5 24.5C14.5 17.6 19.8 12 26.4 12c4.8 0 8.9 2.9 10.8 7"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M13 26h22.5c0 5.9-5.6 10.7-12.6 10.7S13 31.9 13 26Z"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M25.2 14.4c1.3 1.4 1.7 3 1.1 4.4-.5 1.1-1.6 1.8-2.8 2.4-.7-1.2-1.3-2.5-1.1-3.8.2-1.6 1.2-2.6 2.8-3Z"
+          fill="currentColor"
+          opacity="0.88"
+        />
+        <path
+          d="M20.2 16.2c.9 1 .9 2.3.1 3.2-.4.5-1 .8-1.7 1.1-.4-.8-.6-1.7-.4-2.5.2-1 .8-1.6 2-1.8Z"
+          fill="currentColor"
+          opacity="0.58"
+        />
+      </svg>
+    </div>
   );
 }
 
@@ -388,22 +427,26 @@ export default async function DashboardPage() {
     {
       label: 'Dishes',
       value: String(dishCountResult.count ?? 0),
-      hint: 'Household library ready to plan from'
+      hint: 'Household library ready to plan from',
+      accent: 'bg-primary/15'
     },
     {
       label: 'Combos',
       value: String(comboCountResult.count ?? 0),
-      hint: 'Optional reusable meal bundles'
+      hint: 'Optional reusable meal bundles',
+      accent: 'bg-secondary/20'
     },
     {
       label: 'Planned meals',
       value: String(weeklyPlannedMeals),
-      hint: `${cookedMealCount} cook, ${leftoverMealCount} leftover this week`
+      hint: `${cookedMealCount} cook, ${leftoverMealCount} leftover this week`,
+      accent: 'bg-accent/25'
     },
     {
       label: 'Groceries',
       value: String(groceryItemCount),
-      hint: 'Main grocery items for this week'
+      hint: 'Main grocery items for this week',
+      accent: 'bg-cream/50'
     }
   ];
 
@@ -412,74 +455,60 @@ export default async function DashboardPage() {
       title="Dashboard"
       description="A calm home base for your household meal library, weekly plan, leftovers, and grocery flow."
     >
-      <div className="space-y-4">
-        <section className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-          <div className="rounded-[1.75rem] border border-border bg-white p-5 shadow-soft">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-              This week
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold text-foreground">
-              {household.name || 'Your household'} is set for {getWeekRangeLabel(weekStartDate)}
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-              {weeklyPlannedMeals > 0
-                ? `You have ${weeklyPlannedMeals} planned meal slots this week, with leftovers enabled by default for ${household.default_people_per_meal} people per meal.`
-                : `No meals are planned yet for this week. Start with dishes, then map out the week and generate groceries from cooked meals.`}
-            </p>
-
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              {stats.map((stat) => (
-                <div key={stat.label} className="rounded-3xl border border-border bg-muted/20 p-4">
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  <p className="mt-2 text-3xl font-semibold text-foreground">{stat.value}</p>
-                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                    {stat.hint}
+      <div className="space-y-5 lg:space-y-6">
+        <section className="overflow-hidden rounded-[2rem] border border-[#eadde2] bg-[linear-gradient(135deg,rgba(255,247,250,0.98),rgba(255,249,245,0.95),rgba(247,251,248,0.96))] shadow-[0_12px_32px_rgba(90,60,70,0.06)]">
+          <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="p-5 sm:p-6 lg:p-7">
+              <div className="flex items-center gap-3">
+                <DashboardHeroIcon />
+                <div>
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                    This week
                   </p>
+                  <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[2.2rem] sm:leading-tight">
+                    Your household is set for {getWeekRangeLabel(weekStartDate)}
+                  </h2>
                 </div>
-              ))}
+              </div>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-[0.98rem]">
+                {weeklyPlannedMeals > 0
+                  ? `You have ${weeklyPlannedMeals} planned meal slots this week, with leftovers enabled by default for ${household.default_people_per_meal} people per meal.`
+                  : `No meals are planned yet for this week. Start with dishes, then map out the week and generate groceries from cooked meals.`}
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                <span className="rounded-full border border-primary/25 bg-primary/18 px-4 py-2 text-sm font-medium text-foreground">
+                  {household.default_people_per_meal} people per meal
+                </span>
+                <span className="rounded-full border border-secondary/30 bg-secondary/18 px-4 py-2 text-sm font-medium text-foreground">
+                  Leftovers {household.default_leftover_enabled ? 'on' : 'off'}
+                </span>
+                <span className="rounded-full border border-accent/40 bg-accent/28 px-4 py-2 text-sm font-medium text-foreground">
+                  {getWeekRangeLabel(weekStartDate)}
+                </span>
+              </div>
+            </div>
+
+            <div className="border-t border-[#eadde2] bg-[rgba(255,252,253,0.78)] p-5 sm:p-6 lg:border-l lg:border-t-0 lg:p-7">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                {stats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-[1.5rem] border border-[#eadde2] bg-white/92 p-4 shadow-[0_8px_20px_rgba(90,60,70,0.05)]"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                        {stat.label}
+                      </p>
+                      <span className={`h-3.5 w-3.5 rounded-full ${stat.accent}`} />
+                    </div>
+                    <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">{stat.value}</p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{stat.hint}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-
-          <PageSection eyebrow="Quick actions" title="Jump into the next household task">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Link
-                href="/dishes"
-                className="rounded-3xl border border-border bg-white p-4 text-left shadow-soft transition hover:-translate-y-0.5"
-              >
-                <p className="text-sm font-semibold text-foreground">Add a dish</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Build recipes and tag pantry staples.
-                </p>
-              </Link>
-              <Link
-                href="/combos"
-                className="rounded-3xl border border-border bg-white p-4 text-left shadow-soft transition hover:-translate-y-0.5"
-              >
-                <p className="text-sm font-semibold text-foreground">Add a meal combo</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Save a repeatable plate when you want one-tap planning later.
-                </p>
-              </Link>
-              <Link
-                href="/planner"
-                className="rounded-3xl border border-border bg-white p-4 text-left shadow-soft transition hover:-translate-y-0.5"
-              >
-                <p className="text-sm font-semibold text-foreground">Plan this week</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Place dishes, set portions, and assign leftovers.
-                </p>
-              </Link>
-              <Link
-                href="/grocery"
-                className="rounded-3xl border border-border bg-white p-4 text-left shadow-soft transition hover:-translate-y-0.5"
-              >
-                <p className="text-sm font-semibold text-foreground">View grocery list</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Generate the week&apos;s checklist from cooked meals only.
-                </p>
-              </Link>
-            </div>
-          </PageSection>
         </section>
 
         <section className="grid gap-4 lg:grid-cols-2">
@@ -497,51 +526,37 @@ export default async function DashboardPage() {
           />
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-          <PageSection eyebrow="Household defaults" title="Planner behavior at a glance">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-3xl border border-border bg-white p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                  Default people per meal
-                </p>
-                <p className="mt-2 text-2xl font-semibold text-foreground">
-                  {household.default_people_per_meal}
-                </p>
-              </div>
-              <div className="rounded-3xl border border-border bg-white p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                  Leftovers by default
-                </p>
-                <p className="mt-2 text-2xl font-semibold text-foreground">
-                  {household.default_leftover_enabled ? 'On' : 'Off'}
-                </p>
-              </div>
+        <PageSection eyebrow="Household defaults" title="Planner behavior at a glance">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[1.5rem] border border-[#eadde2] bg-primary/12 p-4">
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Default people per meal
+              </p>
+              <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
+                {household.default_people_per_meal}
+              </p>
             </div>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">
-              You can update both settings anytime from the settings page if your household rhythm changes.
-            </p>
-            <div className="mt-4">
-              <Link
-                href="/settings"
-                className="inline-flex rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground"
-              >
-                Open settings
-              </Link>
+            <div className="rounded-[1.5rem] border border-[#eadde2] bg-secondary/14 p-4">
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Leftovers by default
+              </p>
+              <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
+                {household.default_leftover_enabled ? 'On' : 'Off'}
+              </p>
             </div>
-          </PageSection>
-
-          <PageSection eyebrow="Next best step" title="Keep the workflow moving">
-            <div className="rounded-3xl border border-dashed border-border bg-muted/30 p-5 text-sm leading-6 text-muted-foreground">
-              {dishCountResult.count === 0
-                ? 'Start by creating a few dishes. Once the dish library exists, planning and grocery generation both become much smoother.'
-                : weeklyPlannedMeals === 0
-                  ? 'Your dish library is ready. The next leverage move is to plan this week so leftovers and groceries can work for you.'
-                  : groceryItemCount === 0
-                    ? 'The week is planned. Generate the grocery list next so you can shop from cooked meals only.'
-                    : 'The core workflow is in good shape. Review tomorrow, adjust leftovers if needed, and keep the grocery list current.'}
-            </div>
-          </PageSection>
-        </section>
+          </div>
+          <p className="mt-4 text-sm leading-6 text-muted-foreground">
+            You can update both settings anytime from the settings page if your household rhythm changes.
+          </p>
+          <div className="mt-4">
+            <Link
+              href="/settings"
+              className="inline-flex rounded-full border border-[#eadde2] bg-white/94 px-4 py-3 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_12px_22px_rgba(90,60,70,0.08)]"
+            >
+              Open settings
+            </Link>
+          </div>
+        </PageSection>
       </div>
     </AppShell>
   );

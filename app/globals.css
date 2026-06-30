@@ -1,20 +1,24 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: 42 33% 97%;
-  --foreground: 222 47% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --muted: 45 25% 93%;
-  --muted-foreground: 215 16% 47%;
-  --border: 214 32% 91%;
-  --primary: 183 84% 30%;
-  --primary-foreground: 0 0% 100%;
-  --accent: 22 92% 55%;
-  --accent-foreground: 0 0% 100%;
-  --danger: 0 84% 60%;
+  --background: 338 100% 98%;
+  --foreground: 335 8% 18%;
+  --card: 338 100% 99%;
+  --card-foreground: 335 8% 18%;
+  --muted: 334 30% 95%;
+  --muted-foreground: 336 8% 46%;
+  --border: 330 26% 88%;
+  --primary: 343 74% 82%;
+  --primary-foreground: 335 18% 18%;
+  --secondary: 147 31% 78%;
+  --secondary-foreground: 335 18% 18%;
+  --accent: 260 60% 88%;
+  --accent-foreground: 335 18% 18%;
+  --cream: 42 100% 92%;
+  --cream-foreground: 335 18% 18%;
+  --danger: 348 58% 63%;
 }
 
 * {
@@ -22,7 +26,7 @@
 }
 
 html {
-  background: #f7f4ef;
+  background: #fff7fa;
 }
 
 body {
@@ -30,14 +34,32 @@ body {
   min-height: 100vh;
   color: hsl(var(--foreground));
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.85), transparent 35%),
-    linear-gradient(180deg, #f8f5f0 0%, #f2efe9 100%);
+    radial-gradient(circle at 15% 20%, rgba(244, 175, 192, 0.2), transparent 28%),
+    radial-gradient(circle at 85% 10%, rgba(191, 220, 203, 0.18), transparent 30%),
+    radial-gradient(circle at 70% 80%, rgba(220, 210, 243, 0.16), transparent 28%),
+    linear-gradient(135deg, #fff7fa 0%, #fff9f5 45%, #f7fbf8 100%);
   font-family:
-    'Avenir Next',
+    'Inter',
+    'Nunito Sans',
     'Segoe UI',
     'Helvetica Neue',
     Arial,
     sans-serif;
+  isolation: isolate;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.065;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 88' fill='none'%3E%3Cg stroke='%23e6c7d4' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M24 43c0-10.5 8.5-19 19-19s19 8.5 19 19'/%3E%3Cpath d='M21 45h46c0 10.7-10 19-23 19s-23-8.3-23-19Z'/%3E%3Cpath d='M33 20c2.2 3 2.2 6.2 0 8.2'/%3E%3Cpath d='M43 16c2.6 3.2 2.6 6.8 0 9.3'/%3E%3Cpath d='M53 20c2.2 3 2.2 6.2 0 8.2'/%3E%3C/g%3E%3Cg fill='%23cfe6da' opacity='0.35'%3E%3Ccircle cx='64' cy='25' r='2.2'/%3E%3Ccircle cx='28' cy='68' r='1.9'/%3E%3Ccircle cx='72' cy='68' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 188px 188px;
+  background-position: center top;
+  background-repeat: repeat;
 }
 
 a {
@@ -46,12 +68,12 @@ a {
 }
 
 ::selection {
-  background: rgba(15, 118, 110, 0.18);
+  background: rgba(244, 175, 192, 0.24);
 }
 
 .bg-shell {
   background-image:
-    radial-gradient(circle at top left, rgba(244, 114, 182, 0.18), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.16), transparent 28%);
+    radial-gradient(circle at top left, rgba(244, 175, 192, 0.15), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(191, 220, 203, 0.14), transparent 30%),
+    radial-gradient(circle at center right, rgba(220, 210, 243, 0.12), transparent 28%);
 }
-

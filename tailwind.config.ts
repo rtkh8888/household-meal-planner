@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss';
+﻿import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -18,8 +18,12 @@ const config: Config = {
         border: 'hsl(var(--border))',
         primary: 'hsl(var(--primary))',
         'primary-foreground': 'hsl(var(--primary-foreground))',
+        secondary: 'hsl(var(--secondary))',
+        'secondary-foreground': 'hsl(var(--secondary-foreground))',
         accent: 'hsl(var(--accent))',
         'accent-foreground': 'hsl(var(--accent-foreground))',
+        cream: 'hsl(var(--cream))',
+        'cream-foreground': 'hsl(var(--cream-foreground))',
         danger: 'hsl(var(--danger))'
       },
       boxShadow: {
@@ -27,7 +31,7 @@ const config: Config = {
       },
       backgroundImage: {
         'shell-radial':
-          'radial-gradient(circle at top left, rgba(244, 114, 182, 0.18), transparent 35%), radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.16), transparent 28%)'
+          'radial-gradient(circle at top left, rgba(244, 175, 192, 0.15), transparent 35%), radial-gradient(circle at bottom right, rgba(191, 220, 203, 0.14), transparent 30%), radial-gradient(circle at center right, rgba(220, 210, 243, 0.12), transparent 28%)'
       }
     }
   },
@@ -35,4 +39,3 @@ const config: Config = {
 };
 
 export default config;
-

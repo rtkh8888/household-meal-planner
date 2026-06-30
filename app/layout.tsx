@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
 
@@ -13,9 +13,8 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className="scroll-smooth">
+      <body className="bg-background text-foreground antialiased">{children}</body>
     </html>
   );
 }
-
