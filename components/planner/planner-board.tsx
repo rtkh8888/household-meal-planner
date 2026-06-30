@@ -61,7 +61,35 @@ type PlannerFormState = {
 };
 
 const MEAL_TYPES: MealTypeOption[] = ['breakfast', 'lunch', 'dinner'];
+const DEFAULT_VISIBLE_MEAL_TYPES: MealTypeOption[] = ['lunch', 'dinner'];
 const PLANNER_COMBO_DESCRIPTION = 'Created from weekly planner';
+
+const MEAL_TYPE_LABELS: Record<MealTypeOption, string> = {
+  breakfast: 'Breakfast',
+  lunch: 'Lunch',
+  dinner: 'Dinner'
+};
+
+const MEAL_TYPE_ACCENTS: Record<
+  MealTypeOption,
+  {
+    section: string;
+    badge: string;
+  }
+> = {
+  breakfast: {
+    section: 'border-lavender/50 bg-lavender/18',
+    badge: 'bg-lavender/55 text-foreground'
+  },
+  lunch: {
+    section: 'border-secondary/45 bg-secondary/14',
+    badge: 'bg-secondary/60 text-foreground'
+  },
+  dinner: {
+    section: 'border-peach/55 bg-peach/18',
+    badge: 'bg-peach/75 text-foreground'
+  }
+};
 
 function shiftIsoDate(value: string, days: number) {
   const date = new Date(`${value}T00:00:00Z`);
@@ -82,7 +110,7 @@ function createFormState(
     mealType: defaultMealType,
     mealComboId: '',
     selectedDishIds: [],
-    portionsCooked: 2,
+    portionsCooked: 4,
     portionsEaten: 2,
     assignLeftovers: defaultLeftoverEnabled,
     leftoverTargetDate: nextSlot.date,
@@ -112,6 +140,14 @@ function getLeftoverSlotsForCookBatch(
   );
 }
 
+function formatFriendlyDate(value: string) {
+  return new Date(`${value}T00:00:00Z`).toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC'
+  });
+}
 
 export function PlannerBoard() {
   const initialWeekStart = getWeekStart(new Date());
@@ -125,11 +161,28 @@ export function PlannerBoard() {
   const [isSaving, setIsSaving] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [editingSlotId, setEditingSlotId] = useState<string | null>(null);
+  const [showBreakfast, setShowBreakfast] = useState(false);
   const [formState, setFormState] = useState<PlannerFormState>(() =>
     createFormState(initialWeekStart, true)
   );
 
   const weekDays = useMemo(() => getWeekDays(weekStartDate), [weekStartDate]);
+  const visibleMealTypes = useMemo(
+    () => (showBreakfast ? MEAL_TYPES : DEFAULT_VISIBLE_MEAL_TYPES),
+    [showBreakfast]
+  );
+
+  const slotsByDay = useMemo(() => {
+    const map = new Map<string, PlannerSlot[]>();
+
+    (data?.slots ?? []).forEach((slot) => {
+      const existing = map.get(slot.date) ?? [];
+      existing.push(slot);
+      map.set(slot.date, existing);
+    });
+
+    return map;
+  }, [data?.slots]);
 
   const slotsByCell = useMemo(() => {
     const map = new Map<string, PlannerSlot[]>();
@@ -152,8 +205,6 @@ export function PlannerBoard() {
 
   const isEditing = Boolean(editingSlot);
   const isEditingLeftover = editingSlot?.entry_type === 'leftover';
-
-
   const loadPlannerData = useCallback(async (targetWeekStart: string) => {
     setIsLoading(true);
     setLoadError(null);
@@ -381,8 +432,8 @@ export function PlannerBoard() {
       mealType,
       mealComboId: '',
       selectedDishIds: [],
-      portionsCooked: defaults?.default_people_per_meal ?? 2,
-      portionsEaten: defaults?.default_people_per_meal ?? 2,
+      portionsCooked: 4,
+      portionsEaten: 2,
       assignLeftovers: defaults?.default_leftover_enabled ?? true,
       leftoverTargetDate: nextSlot.date,
       leftoverTargetMealType: nextSlot.mealType,
@@ -901,24 +952,192 @@ export function PlannerBoard() {
       setPendingDeleteId(null);
     }
   }
+  const getVisibleSlotCountForDay = (dayIso: string) =>
+    (slotsByDay.get(dayIso) ?? []).filter((slot) =>
+      visibleMealTypes.includes(slot.meal_type as MealTypeOption)
+    ).length;
+
+  const renderMealSlotCard = (slot: PlannerSlot) => {
+    const relatedLeftoverSlot =
+      slot.entry_type === 'cook' && data
+        ? (getLeftoverSlotsForCookBatch(data.slots, slot.cook_batch_id, slot.id)[0] ?? null)
+        : null;
+    const dishes = slot.combo?.dishes ?? [];
+    const visibleDishes = dishes.slice(0, 3);
+    const extraDishCount = Math.max(0, dishes.length - visibleDishes.length);
+    const mealType = slot.meal_type as MealTypeOption;
+    const cookedCount = slot.cookBatch?.portions_cooked ?? slot.portions_eaten;
+    const summaryText =
+      slot.entry_type === 'cook'
+        ? `${cookedCount} cooked, ${slot.portions_eaten} eaten now`
+        : `${slot.portions_eaten} portions leftover`;
+
+    return (
+      <article className="rounded-[1.5rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,244,255,0.94))] p-4 shadow-[0_10px_24px_rgba(90,60,70,0.06)]">
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-2">
+            <div className="flex flex-wrap gap-2">
+              <span className={`rounded-full px-3 py-1 text-xs font-semibold ${MEAL_TYPE_ACCENTS[mealType].badge}`}>
+                {slot.entry_type === 'cook' ? 'Cook' : 'Leftover'}
+              </span>
+              {slot.entry_type === 'cook' && !isPlannerGeneratedCombo(slot.combo) ? (
+                <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                  Manual
+                </span>
+              ) : null}
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-muted-foreground">
+                {summaryText}
+              </span>
+            </div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              {slot.entry_type === 'leftover'
+                ? `From ${formatFriendlyDate(slot.cookBatch?.cooked_date ?? slot.date)}`
+                : 'Cooked meal'}
+            </p>
+          </div>
+        </div>
+
+        {visibleDishes.length > 0 ? (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {visibleDishes.map((dish) => (
+              <span
+                key={`${slot.id}-${dish.id}`}
+                className="rounded-full border border-border bg-white px-3 py-2 text-xs font-semibold text-foreground"
+              >
+                {dish.name}
+              </span>
+            ))}
+            {extraDishCount > 0 ? (
+              <span className="rounded-full border border-dashed border-border bg-muted/30 px-3 py-2 text-xs font-medium text-muted-foreground">
+                +{extraDishCount} more
+              </span>
+            ) : null}
+          </div>
+        ) : null}
+
+        {slot.entry_type === 'cook' && relatedLeftoverSlot ? (
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            Leftover planned for {formatFriendlyDate(relatedLeftoverSlot.date)}
+          </p>
+        ) : null}
+
+        {slot.notes ? <p className="mt-3 text-sm leading-6 text-muted-foreground">{slot.notes}</p> : null}
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => openEditMeal(slot)}
+            className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground transition hover:-translate-y-0.5 hover:border-primary/30"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            onClick={() => handleDeleteSlot(slot)}
+            disabled={pendingDeleteId === slot.id}
+            className="rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-900 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {pendingDeleteId === slot.id ? 'Deleting...' : 'Delete'}
+          </button>
+        </div>
+      </article>
+    );
+  };
+
+  const renderMealSection = (day: { isoDate: string }, mealType: MealTypeOption) => {
+    const cellKey = `${day.isoDate}:${mealType}`;
+    const cellSlots = slotsByCell.get(cellKey) ?? [];
+
+    if (!visibleMealTypes.includes(mealType)) {
+      return null;
+    }
+
+    return (
+      <div key={cellKey} className={`rounded-[1.5rem] border p-4 ${MEAL_TYPE_ACCENTS[mealType].section}`}>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              {MEAL_TYPE_LABELS[mealType]}
+            </p>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+              {cellSlots.length === 0 ? 'No meal planned yet' : `${cellSlots.length} planned`}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => openAddMeal(day.isoDate, mealType)}
+            disabled={data.dishes.length === 0}
+            className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Add meal
+          </button>
+        </div>
+
+        {cellSlots.length === 0 ? (
+          <div className="mt-4 rounded-[1.25rem] border border-dashed border-border bg-white/80 px-4 py-5 text-sm leading-6 text-muted-foreground">
+            This meal is still open.
+          </div>
+        ) : (
+          <div className="mt-4 space-y-4">
+            {cellSlots.map((slot) => renderMealSlotCard(slot))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderDayRow = (day: { isoDate: string; dayLabel: string; dateLabel: string; isToday: boolean }) => {
+    const dayCount = getVisibleSlotCountForDay(day.isoDate);
+
+    return (
+      <article
+        key={day.isoDate}
+        className="rounded-[2rem] border border-border bg-white p-4 shadow-[0_10px_28px_rgba(90,60,70,0.06)]"
+      >
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-5">
+          <div className="flex min-w-0 items-start justify-between gap-3 lg:w-[11rem] lg:flex-col lg:justify-start lg:gap-2">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                {day.dayLabel}
+              </p>
+              <h3 className="mt-2 text-lg font-semibold text-foreground">{day.dateLabel}</h3>
+            </div>
+            <div className="flex flex-col items-end gap-2 lg:items-start">
+              {day.isToday ? (
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                  Today
+                </span>
+              ) : null}
+              <span className="rounded-full bg-muted/60 px-3 py-1 text-xs font-semibold text-muted-foreground">
+                {dayCount === 0 ? 'No meals' : `${dayCount} meals`}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:flex-1">
+            {visibleMealTypes.map((mealType) => renderMealSection(day, mealType))}
+          </div>
+        </div>
+      </article>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <section className="rounded-[1.75rem] border border-border bg-white/85 p-5">
+        <section className="rounded-[2rem] border border-border bg-white/90 p-5 shadow-soft">
           <div className="h-4 w-32 rounded bg-muted" />
           <div className="mt-4 h-10 rounded bg-muted" />
-        </section>
-        <div className="overflow-x-auto pb-2">
-          <div className="grid min-w-[1540px] grid-cols-7 gap-4">
-            {Array.from({ length: 7 }).map((_, index) => (
-              <div key={index} className="rounded-[1.75rem] border border-border bg-white p-5">
-                <div className="h-4 w-16 rounded bg-muted" />
-                <div className="mt-3 h-5 w-24 rounded bg-muted" />
-                <div className="mt-5 h-48 rounded bg-muted" />
+          <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="rounded-[1.5rem] border border-border bg-white p-4">
+                <div className="h-4 w-20 rounded bg-muted" />
+                <div className="mt-3 h-5 w-28 rounded bg-muted" />
+                <div className="mt-4 h-28 rounded bg-muted" />
               </div>
             ))}
           </div>
-        </div>
+        </section>
       </div>
     );
   }
@@ -932,26 +1151,16 @@ export function PlannerBoard() {
     );
   }
 
+
   return (
-    <div className="space-y-4">
-      <section className="rounded-[1.75rem] border border-border bg-white/85 p-5">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-              Week selector
-            </p>
-            <h2 className="mt-2 text-lg font-semibold">Plan cook batches and leftovers for the week</h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Household defaults: {data.household.default_people_per_meal} people per meal and leftovers{' '}
-              {data.household.default_leftover_enabled ? 'enabled' : 'disabled'} by default.
-            </p>
+    <div className="space-y-5">
+      <section className="rounded-[2rem] border border-border bg-white/90 p-5 shadow-soft">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="rounded-[1.35rem] border border-border bg-white px-5 py-4 text-base font-semibold text-foreground shadow-[0_8px_18px_rgba(90,60,70,0.05)] sm:text-lg">
+            {formatWeekRange(weekStartDate)}
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-            <div className="rounded-2xl border border-border bg-muted/20 px-4 py-3 text-sm">
-              <p className="font-semibold text-foreground">{formatWeekRange(weekStartDate)}</p>
-              <p className="mt-1 text-muted-foreground">Week of {weekStartDate}</p>
-            </div>
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
@@ -976,10 +1185,21 @@ export function PlannerBoard() {
               </button>
             </div>
           </div>
-        </div>
+        </div>
+        <div className="mt-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-end">
+          <label className="inline-flex items-center gap-3 rounded-full border border-border bg-white px-4 py-3 text-sm font-medium text-foreground">
+            <input
+              type="checkbox"
+              checked={showBreakfast}
+              onChange={(event) => setShowBreakfast(event.target.checked)}
+              className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+            />
+            Show breakfast
+          </label>
+        </div>
         {data.dishes.length === 0 ? (
-          <div className="mt-5 rounded-3xl border border-dashed border-border bg-muted/35 p-5 text-sm leading-6 text-muted-foreground">
-            Add dishes before planning the week.
+          <div className="mt-5 rounded-3xl border border-dashed border-border bg-muted/25 p-5 text-sm leading-6 text-muted-foreground">
+            Add dishes first to build out the weekly planner.
             <div className="mt-4">
               <Link
                 href="/dishes"
@@ -989,136 +1209,12 @@ export function PlannerBoard() {
               </Link>
             </div>
           </div>
-        ) : data.combos.length === 0 ? (
-          <div className="mt-5 rounded-3xl border border-dashed border-border bg-muted/35 p-5 text-sm leading-6 text-muted-foreground">
-            You can plan directly from dishes now. You can plan directly from dishes now, and meal combos stay available in the codebase for future use.
-            <div className="mt-4">
-              <Link
-                href="/dishes"
-                className="inline-flex rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground"
-              >
-                Browse dishes
-              </Link>
-            </div>
-          </div>
         ) : null}
       </section>
-
-      <div className="overflow-x-auto pb-2">
-        <section className="grid min-w-[1540px] grid-cols-7 gap-4">
-          {weekDays.map((day) => (
-            <article
-              key={day.isoDate}
-              className="min-h-full rounded-[1.75rem] border border-border bg-white p-5 shadow-soft"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                    {day.dayLabel}
-                  </p>
-                  <h3 className="mt-2 text-lg font-semibold text-foreground">{day.dateLabel}</h3>
-                </div>
-                {day.isToday ? (
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                    Today
-                  </span>
-                ) : null}
-              </div>
-
-              <div className="mt-4 space-y-4">
-                {MEAL_TYPES.map((mealType) => {
-                  const cellKey = `${day.isoDate}:${mealType}`;
-                  const cellSlots = slotsByCell.get(cellKey) ?? [];
-
-                  return (
-                    <div key={cellKey} className="rounded-3xl border border-border bg-muted/20 p-4">
-                      <div className="flex flex-col gap-3">
-                        <div>
-                          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                            {mealType}
-                          </p>
-                          <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                            {cellSlots.length === 0 ? 'No meal planned yet' : `${cellSlots.length} planned`}
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => openAddMeal(day.isoDate, mealType)}
-                          disabled={data.dishes.length === 0}
-                          className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          Add meal
-                        </button>
-                      </div>
-
-                      {cellSlots.length === 0 ? (
-                        <div className="mt-4 rounded-2xl border border-dashed border-border bg-white/80 px-4 py-5 text-sm leading-6 text-muted-foreground">
-                          Empty slot.
-                        </div>
-                      ) : (
-                        <div className="mt-4 space-y-4">
-                          {cellSlots.map((slot) => (
-                            <div key={slot.id} className="rounded-[1.5rem] border border-border bg-white p-4 shadow-soft">
-                              <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                                  {slot.entry_type === 'cook' ? 'Cook' : 'Leftover'}
-                                </p>
-                                <p className="mt-2 text-lg font-semibold leading-8 text-foreground">
-                                  {slot.combo?.name ?? 'Unknown combo'}
-                                </p>
-                              </div>
-
-                              <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                                Portions eaten: {slot.portions_eaten}
-                                {slot.cookBatch ? ` of ${slot.cookBatch.portions_cooked} cooked` : ''}
-                              </p>
-
-                              {slot.combo && slot.combo.dishes.length > 0 ? (
-                                <div className="mt-3 flex flex-wrap gap-2">
-                                  {slot.combo.dishes.map((dish) => (
-                                    <span
-                                      key={`${slot.id}-${dish.id}`}
-                                      className="rounded-full bg-muted px-3 py-2 text-xs font-semibold leading-5 text-foreground"
-                                    >
-                                      {dish.name}
-                                    </span>
-                                  ))}
-                                </div>
-                              ) : null}
-
-                              {slot.notes ? (
-                                <p className="mt-3 text-sm leading-7 text-muted-foreground">{slot.notes}</p>
-                              ) : null}
-
-                              <div className="mt-4 flex flex-wrap gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => openEditMeal(slot)}
-                                  className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground"
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteSlot(slot)}
-                                  disabled={pendingDeleteId === slot.id}
-                                  className="rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-900 disabled:cursor-not-allowed disabled:opacity-60"
-                                >
-                                  {pendingDeleteId === slot.id ? 'Deleting...' : 'Delete'}
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </article>
-          ))}
-        </section>
+      <div className="space-y-4">
+        {weekDays.map((day) => renderDayRow(day))}
       </div>
+
       {isModalOpen ? (
         <div className="fixed inset-0 z-40 overflow-y-auto bg-black/35 px-4 py-6 backdrop-blur-sm">
           <div className="mx-auto max-w-2xl rounded-[2rem] border border-border bg-[rgba(247,244,239,0.98)] p-5 shadow-soft">
@@ -1385,4 +1481,17 @@ export function PlannerBoard() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 

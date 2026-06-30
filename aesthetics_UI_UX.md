@@ -480,14 +480,14 @@ Make the form compact and easy to use.
 
 ## Planner Acceptance Criteria
 
-- [ ] No cramped 7-column tube layout.
-- [ ] Lunch and Dinner are visible by default.
-- [ ] Breakfast is optional/hidden by default.
-- [ ] Planner works nicely on mobile.
-- [ ] Meal cards can handle long combo names without ugly overflow.
-- [ ] Cook and leftover meals are visually distinct.
-- [ ] Leftovers remain linked correctly to original cook batch.
-- [ ] Existing planner functionality remains intact.
+- [x] No cramped 7-column tube layout.
+- [x] Lunch and Dinner are visible by default.
+- [x] Breakfast is optional/hidden by default.
+- [x] Planner works nicely on mobile.
+- [x] Meal cards can handle long combo names without ugly overflow.
+- [x] Cook and leftover meals are visually distinct.
+- [x] Leftovers remain linked correctly to original cook batch.
+- [x] Existing planner functionality remains intact.
 
 ---
 
@@ -930,4 +930,5 @@ Use this command with the dev AI agent:
 ```text
 Implement Phase 1 and Phase 3 first. The highest priority is redesigning the visual system and fixing the weekly planner layout. Do not touch database schema. Do not change grocery generation logic. Preserve all existing Supabase logic.
 ```
+
 
