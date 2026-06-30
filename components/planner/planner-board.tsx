@@ -991,13 +991,13 @@ export function PlannerBoard() {
           </div>
         ) : data.combos.length === 0 ? (
           <div className="mt-5 rounded-3xl border border-dashed border-border bg-muted/35 p-5 text-sm leading-6 text-muted-foreground">
-            You can plan directly from dishes now. Meal combos are optional and still useful for frequently repeated meals.
+            You can plan directly from dishes now. You can plan directly from dishes now, and meal combos stay available in the codebase for future use.
             <div className="mt-4">
               <Link
-                href="/combos"
+                href="/dishes"
                 className="inline-flex rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground"
               >
-                Manage combos
+                Browse dishes
               </Link>
             </div>
           </div>
@@ -1385,3 +1385,4 @@ export function PlannerBoard() {
     </div>
   );
 }
+

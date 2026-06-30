@@ -12,76 +12,41 @@ type DishIngredientRow = Database['public']['Tables']['dish_ingredients']['Row']
 type DishIngredientInsert = Database['public']['Tables']['dish_ingredients']['Insert'];
 
 type IngredientType = 'grocery' | 'pantry' | 'optional';
-type DishCategory =
-  | 'protein'
-  | 'vegetable'
-  | 'carb'
-  | 'soup'
-  | 'side'
-  | 'one_pot'
-  | 'breakfast'
-  | 'snack'
-  | 'other';
+type DishCategory = 'protein' | 'vegetable' | 'carb' | 'soup' | 'side' | 'one_pot' | 'breakfast' | 'snack' | 'other';
+type FilterCategory = DishCategory | 'all';
 
-type DishWithIngredients = DishRow & {
-  ingredients: DishIngredientRow[];
-};
-
-type IngredientDraft = {
-  id: string;
-  name: string;
-  ingredientType: IngredientType;
-};
-
-type FormState = {
-  id: string | null;
-  name: string;
-  category: DishCategory | '';
-  instructions: string;
-  notes: string;
-  ingredients: IngredientDraft[];
-};
+type DishWithIngredients = DishRow & { ingredients: DishIngredientRow[] };
+type IngredientDraft = { id: string; name: string; ingredientType: IngredientType };
+type FormState = { id: string | null; name: string; category: DishCategory | ''; instructions: string; notes: string; ingredients: IngredientDraft[] };
 
 type SaveState = 'idle' | 'saving';
 
-type FilterCategory = DishCategory | 'all';
-
-const CATEGORY_OPTIONS: Array<{ value: DishCategory; label: string }> = [
-  { value: 'protein', label: 'Protein' },
-  { value: 'vegetable', label: 'Vegetable' },
-  { value: 'carb', label: 'Carb' },
-  { value: 'soup', label: 'Soup' },
-  { value: 'side', label: 'Side' },
-  { value: 'one_pot', label: 'One pot' },
-  { value: 'breakfast', label: 'Breakfast' },
-  { value: 'snack', label: 'Snack' },
-  { value: 'other', label: 'Other' }
+const CATEGORY_OPTIONS: Array<{ value: DishCategory; label: string; tint: string }> = [
+  { value: 'protein', label: 'Protein', tint: 'bg-secondary/55' },
+  { value: 'vegetable', label: 'Vegetable', tint: 'bg-lavender/60' },
+  { value: 'carb', label: 'Carb', tint: 'bg-accent/65' },
+  { value: 'soup', label: 'Soup', tint: 'bg-peach/70' },
+  { value: 'side', label: 'Side', tint: 'bg-lime/65' },
+  { value: 'one_pot', label: 'One pot', tint: 'bg-rose-soft/75' },
+  { value: 'breakfast', label: 'Breakfast', tint: 'bg-secondary/45' },
+  { value: 'snack', label: 'Snack', tint: 'bg-lavender/50' },
+  { value: 'other', label: 'Other', tint: 'bg-muted' }
 ];
 
-const INGREDIENT_TYPE_OPTIONS: Array<{ value: IngredientType; label: string; hint: string }> = [
-  { value: 'grocery', label: 'Grocery', hint: 'Included in grocery generation later.' },
-  { value: 'pantry', label: 'Pantry', hint: 'Excluded from grocery generation by default.' },
-  { value: 'optional', label: 'Optional', hint: 'Visible in recipes, excluded from grocery generation.' }
-];
+const PANTRY_STAPLES = ['Soy sauce', 'Oyster sauce', 'Oil', 'Salt', 'Pepper', 'Sugar', 'Sesame oil', 'Cornstarch', 'Vinegar', 'Garlic powder'] as const;
+const TYPE_LABELS: Record<IngredientType, string> = { grocery: 'Grocery', pantry: 'Pantry', optional: 'Optional' };
+const TYPE_STYLES: Record<IngredientType, { card: string; active: string; pill: string }> = {
+  grocery: { card: 'bg-secondary/18 border-secondary/35', active: 'bg-secondary/70 border-secondary/50 text-foreground', pill: 'bg-secondary/55 text-foreground' },
+  pantry: { card: 'bg-accent/24 border-accent/35', active: 'bg-accent/80 border-accent/55 text-foreground', pill: 'bg-accent/70 text-foreground' },
+  optional: { card: 'bg-primary/14 border-primary/28', active: 'bg-primary/72 border-primary/50 text-foreground', pill: 'bg-primary/55 text-foreground' }
+};
 
 function createIngredientDraft(overrides?: Partial<IngredientDraft>): IngredientDraft {
-  return {
-    id: crypto.randomUUID(),
-    name: '',
-    ingredientType: 'grocery',
-    ...overrides
-  };
+  return { id: crypto.randomUUID(), name: '', ingredientType: 'grocery', ...overrides };
 }
 
 function createEmptyFormState(): FormState {
-  return {
-    id: null,
-    name: '',
-    category: '',
-    instructions: '',
-    notes: '',
-    ingredients: [createIngredientDraft()]
-  };
+  return { id: null, name: '', category: '', instructions: '', notes: '', ingredients: [] };
 }
 
 function toFormState(dish: DishWithIngredients): FormState {
@@ -91,21 +56,45 @@ function toFormState(dish: DishWithIngredients): FormState {
     category: (dish.category as DishCategory | null) ?? '',
     instructions: dish.instructions ?? '',
     notes: dish.notes ?? '',
-    ingredients:
-      dish.ingredients.length > 0
-        ? dish.ingredients.map((ingredient) =>
-            createIngredientDraft({
-              id: ingredient.id,
-              name: ingredient.name,
-              ingredientType: ingredient.ingredient_type as IngredientType
-            })
-          )
-        : [createIngredientDraft()]
+    ingredients: dish.ingredients.map((ingredient) =>
+      createIngredientDraft({ id: ingredient.id, name: ingredient.name, ingredientType: ingredient.ingredient_type as IngredientType })
+    )
   };
 }
 
 function normalizeIngredientName(name: string) {
   return name.trim().replace(/\s+/g, ' ');
+}
+
+function parseBulkIngredients(value: string) {
+  const seen = new Set<string>();
+  return value
+    .split(/\r?\n/)
+    .map(normalizeIngredientName)
+    .filter(Boolean)
+    .filter((line) => {
+      const key = line.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+function getCategoryOption(category: DishCategory | null) {
+  return CATEGORY_OPTIONS.find((option) => option.value === category) ?? null;
+}
+
+function IngredientTypePill({ type, active, onClick }: { type: IngredientType; active: boolean; onClick: () => void }) {
+  const style = TYPE_STYLES[type];
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${active ? style.active : 'border-border bg-white text-muted-foreground hover:border-lavender/40 hover:text-foreground'}`}
+    >
+      {TYPE_LABELS[type]}
+    </button>
+  );
 }
 
 export function DishLibrary() {
@@ -114,31 +103,25 @@ export function DishLibrary() {
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<FilterCategory>('all');
   const [formState, setFormState] = useState<FormState>(createEmptyFormState());
-  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [bulkIngredientsText, setBulkIngredientsText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [formMessage, setFormMessage] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [expandedDishIds, setExpandedDishIds] = useState<Set<string>>(() => new Set());
 
-  useEffect(() => {
-    void loadDishes();
-  }, []);
+  useEffect(() => { void loadDishes(); }, []);
 
   const filteredDishes = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
-
+    const query = search.trim().toLowerCase();
     return dishes.filter((dish) => {
       const matchesSearch =
-        normalizedSearch.length === 0 ||
-        dish.name.toLowerCase().includes(normalizedSearch) ||
-        dish.ingredients.some((ingredient) =>
-          ingredient.name.toLowerCase().includes(normalizedSearch)
-        );
-
+        query.length === 0 ||
+        dish.name.toLowerCase().includes(query) ||
+        dish.ingredients.some((ingredient) => ingredient.name.toLowerCase().includes(query));
       const matchesCategory = categoryFilter === 'all' || dish.category === categoryFilter;
-
       return matchesSearch && matchesCategory;
     });
   }, [categoryFilter, dishes, search]);
@@ -146,26 +129,16 @@ export function DishLibrary() {
   async function loadDishes() {
     setIsLoading(true);
     setLoadError(null);
-
     const supabase = createSupabaseBrowserClient();
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('household_id')
-      .single();
-
+    const { data: profile, error: profileError } = await supabase.from('profiles').select('household_id').single();
     if (profileError || !profile) {
       setLoadError(profileError?.message ?? 'Household profile could not be loaded.');
       setIsLoading(false);
       return;
     }
-
     setHouseholdId(profile.household_id);
 
-    const { data: dishData, error: dishError } = await supabase
-      .from('dishes')
-      .select('*')
-      .order('updated_at', { ascending: false });
-
+    const { data: dishData, error: dishError } = await supabase.from('dishes').select('*').order('updated_at', { ascending: false });
     if (dishError) {
       setLoadError(dishError.message);
       setIsLoading(false);
@@ -174,117 +147,128 @@ export function DishLibrary() {
 
     const dishIds = (dishData ?? []).map((dish) => dish.id);
     let ingredientRows: DishIngredientRow[] = [];
-
     if (dishIds.length > 0) {
-      const { data: ingredientData, error: ingredientError } = await supabase
-        .from('dish_ingredients')
-        .select('*')
-        .in('dish_id', dishIds)
-        .order('sort_order', { ascending: true });
-
+      const { data: ingredientData, error: ingredientError } = await supabase.from('dish_ingredients').select('*').in('dish_id', dishIds).order('sort_order', { ascending: true });
       if (ingredientError) {
         setLoadError(ingredientError.message);
         setIsLoading(false);
         return;
       }
-
       ingredientRows = ingredientData ?? [];
     }
 
     const ingredientsByDishId = new Map<string, DishIngredientRow[]>();
     ingredientRows.forEach((ingredient) => {
-      const existing = ingredientsByDishId.get(ingredient.dish_id) ?? [];
-      existing.push(ingredient);
-      ingredientsByDishId.set(ingredient.dish_id, existing);
+      const list = ingredientsByDishId.get(ingredient.dish_id) ?? [];
+      list.push(ingredient);
+      ingredientsByDishId.set(ingredient.dish_id, list);
     });
 
-    setDishes(
-      (dishData ?? []).map((dish) => ({
-        ...dish,
-        ingredients: ingredientsByDishId.get(dish.id) ?? []
-      }))
-    );
+    setDishes((dishData ?? []).map((dish) => ({ ...dish, ingredients: ingredientsByDishId.get(dish.id) ?? [] })));
     setIsLoading(false);
   }
 
-  function openCreateForm() {
+  function resetForm() {
     setFormState(createEmptyFormState());
+    setBulkIngredientsText('');
     setFormError(null);
     setFormMessage(null);
-    setIsEditorOpen(true);
+  }
+
+  function startNewDish() {
+    resetForm();
+    document.getElementById('dish-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function openEditForm(dish: DishWithIngredients) {
     setFormState(toFormState(dish));
+    setBulkIngredientsText('');
     setFormError(null);
     setFormMessage(null);
-    setIsEditorOpen(true);
+    document.getElementById('dish-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function closeEditor() {
-    setFormState(createEmptyFormState());
-    setFormError(null);
-    setIsEditorOpen(false);
-  }
-
-  function updateIngredient(
-    ingredientId: string,
-    key: keyof IngredientDraft,
-    value: string
-  ) {
+  function updateIngredient(ingredientId: string, key: 'name' | 'ingredientType', value: string) {
     setFormState((current) => ({
       ...current,
-      ingredients: current.ingredients.map((ingredient) =>
-        ingredient.id === ingredientId ? { ...ingredient, [key]: value } : ingredient
-      )
+      ingredients: current.ingredients.map((ingredient) => (ingredient.id === ingredientId ? { ...ingredient, [key]: value } : ingredient))
     }));
   }
 
   function addIngredientRow() {
-    const hasBlankIngredient = formState.ingredients.some(
-      (ingredient) => normalizeIngredientName(ingredient.name).length === 0
-    );
-
-    if (hasBlankIngredient) {
-      setFormError('Finish the current empty ingredient row before adding another one.');
-      return;
-    }
-
     setFormError(null);
-    setFormState((current) => ({
-      ...current,
-      ingredients: [...current.ingredients, createIngredientDraft()]
-    }));
+    setFormState((current) => ({ ...current, ingredients: [...current.ingredients, createIngredientDraft()] }));
   }
 
   function removeIngredientRow(ingredientId: string) {
-    setFormState((current) => {
-      const nextIngredients = current.ingredients.filter((ingredient) => ingredient.id !== ingredientId);
-      return {
-        ...current,
-        ingredients: nextIngredients.length > 0 ? nextIngredients : [createIngredientDraft()]
-      };
-    });
+    setFormState((current) => ({ ...current, ingredients: current.ingredients.filter((ingredient) => ingredient.id !== ingredientId) }));
     setFormError(null);
+  }
+
+  function toggleExpandedDish(dishId: string) {
+    setExpandedDishIds((current) => {
+      const next = new Set(current);
+      if (next.has(dishId)) {
+        next.delete(dishId);
+      } else {
+        next.add(dishId);
+      }
+      return next;
+    });
+  }
+  function addBulkIngredients() {
+    const parsed = parseBulkIngredients(bulkIngredientsText);
+    if (parsed.length === 0) {
+      setFormError('Paste ingredients line by line before converting.');
+      return;
+    }
+
+    setFormState((current) => {
+      const next = [...current.ingredients];
+      const existing = new Set(current.ingredients.map((ingredient) => ingredient.name.toLowerCase()));
+      let added = 0;
+      parsed.forEach((name) => {
+        const key = name.toLowerCase();
+        if (existing.has(key)) return;
+        existing.add(key);
+        next.push(createIngredientDraft({ name }));
+        added += 1;
+      });
+      if (added === 0) setFormError('Those ingredients are already on the list.');
+      else {
+        setFormError(null);
+        setFormMessage(`${added} ingredient${added === 1 ? '' : 's'} added.`);
+      }
+      return { ...current, ingredients: next };
+    });
+
+    setBulkIngredientsText('');
+  }
+
+  function addPantryStaple(name: string) {
+    const normalized = normalizeIngredientName(name).toLowerCase();
+    if (formState.ingredients.some((ingredient) => ingredient.name.toLowerCase() === normalized)) {
+      setFormError(`“${name}” is already in this dish.`);
+      return;
+    }
+    setFormError(null);
+    setFormState((current) => ({
+      ...current,
+      ingredients: [...current.ingredients, createIngredientDraft({ name, ingredientType: 'pantry' })]
+    }));
   }
 
   async function handleSaveDish(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    const trimmedName = formState.name.trim();
-    const normalizedIngredients = formState.ingredients
-      .map((ingredient, index) => ({
-        name: normalizeIngredientName(ingredient.name),
-        ingredientType: ingredient.ingredientType,
-        sortOrder: index
-      }))
+    const name = formState.name.trim();
+    const ingredients = formState.ingredients
+      .map((ingredient, index) => ({ name: normalizeIngredientName(ingredient.name), ingredientType: ingredient.ingredientType, sortOrder: index }))
       .filter((ingredient) => ingredient.name.length > 0);
 
-    if (!trimmedName) {
+    if (!name) {
       setFormError('Dish name is required.');
       return;
     }
-
     if (!householdId) {
       setFormError('Household context is missing. Refresh the page and try again.');
       return;
@@ -293,475 +277,214 @@ export function DishLibrary() {
     setSaveState('saving');
     setFormError(null);
     setFormMessage(null);
-
     const supabase = createSupabaseBrowserClient();
-    const dishUpdatePayload: DishUpdate = {
-      name: trimmedName,
+    let dishId = formState.id;
+    const payload: DishUpdate = {
+      name,
       category: formState.category || null,
       instructions: formState.instructions.trim() || null,
       notes: formState.notes.trim() || null
     };
 
-    let dishId = formState.id;
-
     if (dishId) {
-      const { error: updateError } = await supabase
-        .from('dishes')
-        .update(dishUpdatePayload)
-        .eq('id', dishId);
-
-      if (updateError) {
-        setFormError(updateError.message);
-        setSaveState('idle');
-        return;
-      }
-
-      const { error: deleteIngredientsError } = await supabase
-        .from('dish_ingredients')
-        .delete()
-        .eq('dish_id', dishId);
-
-      if (deleteIngredientsError) {
-        setFormError(deleteIngredientsError.message);
-        setSaveState('idle');
-        return;
-      }
+      const { error: updateError } = await supabase.from('dishes').update(payload).eq('id', dishId);
+      if (updateError) { setFormError(updateError.message); setSaveState('idle'); return; }
+      const { error: deleteIngredientsError } = await supabase.from('dish_ingredients').delete().eq('dish_id', dishId);
+      if (deleteIngredientsError) { setFormError(deleteIngredientsError.message); setSaveState('idle'); return; }
     } else {
-      const dishInsertPayload: DishInsert = {
-        household_id: householdId,
-        name: trimmedName,
-        category: formState.category || null,
-        instructions: formState.instructions.trim() || null,
-        notes: formState.notes.trim() || null
-      };
-
-      const { data: createdDish, error: createError } = await supabase
-        .from('dishes')
-        .insert(dishInsertPayload)
-        .select('id')
-        .single();
-
-      if (createError || !createdDish) {
-        setFormError(createError?.message ?? 'Dish could not be created.');
-        setSaveState('idle');
-        return;
-      }
-
+      const insertPayload: DishInsert = { household_id: householdId, name, category: formState.category || null, instructions: formState.instructions.trim() || null, notes: formState.notes.trim() || null };
+      const { data: createdDish, error: createError } = await supabase.from('dishes').insert(insertPayload).select('id').single();
+      if (createError || !createdDish) { setFormError(createError?.message ?? 'Dish could not be created.'); setSaveState('idle'); return; }
       dishId = createdDish.id;
     }
 
-    if (normalizedIngredients.length > 0) {
-      const ingredientPayload: DishIngredientInsert[] = normalizedIngredients.map((ingredient) => ({
-        dish_id: dishId,
-        name: ingredient.name,
-        ingredient_type: ingredient.ingredientType,
-        sort_order: ingredient.sortOrder
-      }));
-
-      const { error: ingredientInsertError } = await supabase
-        .from('dish_ingredients')
-        .insert(ingredientPayload);
-
-      if (ingredientInsertError) {
-        setFormError(ingredientInsertError.message);
-        setSaveState('idle');
-        return;
-      }
+    if (ingredients.length > 0) {
+      const insertIngredients: DishIngredientInsert[] = ingredients.map((ingredient) => ({ dish_id: dishId, name: ingredient.name, ingredient_type: ingredient.ingredientType, sort_order: ingredient.sortOrder }));
+      const { error: ingredientInsertError } = await supabase.from('dish_ingredients').insert(insertIngredients);
+      if (ingredientInsertError) { setFormError(ingredientInsertError.message); setSaveState('idle'); return; }
     }
 
     setSaveState('idle');
-    closeEditor();
+    resetForm();
     setFormMessage(formState.id ? 'Dish updated.' : 'Dish created.');
     await loadDishes();
   }
 
   async function handleDeleteDish(dish: DishWithIngredients) {
-    const shouldDelete = window.confirm(`Delete "${dish.name}"? This will remove its ingredients too.`);
-    if (!shouldDelete) {
-      return;
-    }
-
+    if (!window.confirm(`Delete "${dish.name}"? This will remove its ingredients too.`)) return;
     setPendingDeleteId(dish.id);
     setLoadError(null);
-
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('dishes').delete().eq('id', dish.id);
-
     setPendingDeleteId(null);
-
-    if (error) {
-      setLoadError(error.message);
-      return;
-    }
-
+    if (error) { setLoadError(error.message); return; }
     setFormMessage('Dish deleted.');
     await loadDishes();
   }
 
   return (
     <div className="space-y-4">
-      <section className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-        <div className="rounded-[1.75rem] border border-border bg-white/85 p-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-                Library
-              </p>
-              <h2 className="mt-2 text-lg font-semibold">Search and shape your dish library</h2>
-            </div>
-            <button
-              type="button"
-              onClick={openCreateForm}
-              className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5"
-            >
-              Add dish
-            </button>
-          </div>
-
-          <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_220px]">
-            <label className="block text-sm">
-              <span className="mb-1 block font-medium text-foreground">Search</span>
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search dishes or ingredients"
-                className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
-              />
-            </label>
-            <label className="block text-sm">
-              <span className="mb-1 block font-medium text-foreground">Category</span>
-              <select
-                value={categoryFilter}
-                onChange={(event) => setCategoryFilter(event.target.value as FilterCategory)}
-                className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
-              >
-                <option value="all">All categories</option>
-                {CATEGORY_OPTIONS.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          {loadError ? <p className="mt-4 text-sm text-danger">{loadError}</p> : null}
-        </div>
-
-        <div className="rounded-[1.75rem] border border-border bg-[rgba(255,255,255,0.96)] p-5">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-                Editor
-              </p>
-              <h2 className="mt-2 text-lg font-semibold">
-                {formState.id ? 'Edit dish' : 'Create a new dish'}
-              </h2>
-            </div>
-            {isEditorOpen ? (
-              <button
-                type="button"
-                onClick={closeEditor}
-                className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground"
-              >
-                Cancel
-              </button>
-            ) : null}
-          </div>
-
-          {isEditorOpen ? (
-            <form onSubmit={handleSaveDish} className="mt-5 space-y-4">
-              <label className="block text-sm">
-                <span className="mb-1 block font-medium text-foreground">Dish name</span>
-                <input
-                  value={formState.name}
-                  onChange={(event) =>
-                    setFormState((current) => ({ ...current, name: event.target.value }))
-                  }
-                  className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
-                  placeholder="Stir fry pork"
-                />
-              </label>
-
-              <label className="block text-sm">
-                <span className="mb-1 block font-medium text-foreground">Category</span>
-                <select
-                  value={formState.category}
-                  onChange={(event) =>
-                    setFormState((current) => ({
-                      ...current,
-                      category: event.target.value as DishCategory | ''
-                    }))
-                  }
-                  className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
-                >
-                  <option value="">No category yet</option>
-                  {CATEGORY_OPTIONS.map((category) => (
-                    <option key={category.value} value={category.value}>
-                      {category.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <div className="rounded-3xl border border-border bg-muted/30 p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Ingredients</p>
-                    <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                      Use pantry and optional types to keep grocery generation clean later.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={addIngredientRow}
-                    className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground"
-                  >
-                    Add ingredient
-                  </button>
-                </div>
-
-                <div className="mt-4 space-y-3">
-                  {formState.ingredients.map((ingredient, index) => {
-                    const optionDetails = INGREDIENT_TYPE_OPTIONS.find(
-                      (option) => option.value === ingredient.ingredientType
-                    );
-
-                    return (
-                      <div key={ingredient.id} className="rounded-2xl border border-border bg-white p-3">
-                        <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_180px_auto] md:items-start">
-                          <label className="block text-sm">
-                            <span className="mb-1 block font-medium text-foreground">
-                              Ingredient {index + 1}
-                            </span>
-                            <input
-                              value={ingredient.name}
-                              onChange={(event) =>
-                                updateIngredient(ingredient.id, 'name', event.target.value)
-                              }
-                              placeholder="Garlic"
-                              className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
-                            />
-                          </label>
-
-                          <label className="block text-sm">
-                            <span className="mb-1 block font-medium text-foreground">Type</span>
-                            <select
-                              value={ingredient.ingredientType}
-                              onChange={(event) =>
-                                updateIngredient(
-                                  ingredient.id,
-                                  'ingredientType',
-                                  event.target.value as IngredientType
-                                )
-                              }
-                              className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
-                            >
-                              {INGREDIENT_TYPE_OPTIONS.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
-
-                          <button
-                            type="button"
-                            onClick={() => removeIngredientRow(ingredient.id)}
-                            className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                        <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                          {optionDetails?.hint}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
+      <section className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
+        <div className="space-y-4">
+          <div className="rounded-[1.75rem] border border-border bg-white/92 p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)]">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Library</p>
+                <h2 className="mt-2 text-lg font-semibold text-foreground">Search and shape your dish library</h2>
               </div>
+              <button type="button" onClick={startNewDish} className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5">New dish</button>
+            </div>
 
-              <label className="block text-sm">
-                <span className="mb-1 block font-medium text-foreground">Instructions</span>
-                <textarea
-                  value={formState.instructions}
-                  onChange={(event) =>
-                    setFormState((current) => ({ ...current, instructions: event.target.value }))
-                  }
-                  rows={4}
-                  className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
-                  placeholder="Quick cooking steps or notes for future you"
-                />
-              </label>
+            <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_220px]">
+              <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Search</span><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search dishes or ingredients" className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" /></label>
+              <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Category</span><select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value as FilterCategory)} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"><option value="all">All categories</option>{CATEGORY_OPTIONS.map((category) => <option key={category.value} value={category.value}>{category.label}</option>)}</select></label>
+            </div>
 
-              <label className="block text-sm">
-                <span className="mb-1 block font-medium text-foreground">Notes</span>
-                <textarea
-                  value={formState.notes}
-                  onChange={(event) =>
-                    setFormState((current) => ({ ...current, notes: event.target.value }))
-                  }
-                  rows={3}
-                  className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
-                  placeholder="Serving ideas, substitutions, prep reminders"
-                />
-              </label>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="rounded-full border border-border bg-muted px-3 py-2 text-xs font-semibold text-foreground">{dishes.length} dishes total</span>
+              <span className="rounded-full border border-lavender/40 bg-lavender/55 px-3 py-2 text-xs font-semibold text-foreground">{filteredDishes.length} showing</span>
+              <span className="rounded-full border border-secondary/40 bg-secondary/30 px-3 py-2 text-xs font-semibold text-foreground">Pantry-aware ingredients</span>
+            </div>
 
-              {formError ? <p className="text-sm text-danger">{formError}</p> : null}
+            {loadError ? <p className="mt-4 text-sm text-danger">{loadError}</p> : null}
+          </div>
 
-              <button
-                type="submit"
-                disabled={saveState === 'saving'}
-                className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {saveState === 'saving'
-                  ? formState.id
-                    ? 'Saving changes...'
-                    : 'Creating dish...'
-                  : formState.id
-                    ? 'Save changes'
-                    : 'Create dish'}
-              </button>
-            </form>
+          {isLoading ? (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">{Array.from({ length: 4 }).map((_, index) => <div key={index} className="rounded-[1.75rem] border border-border bg-white p-5"><div className="h-4 w-24 rounded bg-muted" /><div className="mt-4 h-7 w-2/3 rounded bg-muted" /><div className="mt-4 h-16 rounded bg-muted" /></div>)}</div>
+          ) : filteredDishes.length === 0 ? (
+            <div className="rounded-[1.75rem] border border-dashed border-border bg-white/86 p-8 text-center">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Empty state</p>
+              <h3 className="mt-3 text-2xl font-semibold text-foreground">{dishes.length === 0 ? 'No dishes yet' : 'No dishes match this filter'}</h3>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{dishes.length === 0 ? 'Create your first dish to start building meal combos and future grocery lists.' : 'Try a different search term or category, or clear the filters to see everything again.'}</p>
+              <div className="mt-5 flex flex-wrap justify-center gap-3">{dishes.length === 0 ? <button type="button" onClick={startNewDish} className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground">Create first dish</button> : <button type="button" onClick={() => { setSearch(''); setCategoryFilter('all'); }} className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground">Clear filters</button>}</div>
+            </div>
           ) : (
-            <div className="mt-5 rounded-3xl border border-dashed border-border bg-muted/35 p-5 text-sm leading-6 text-muted-foreground">
-              Tap <span className="font-semibold text-foreground">Add dish</span> to start building your
-              household library. You can store ingredients, classify pantry staples, and come back
-              later to edit everything.
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
+              {filteredDishes.map((dish) => {
+                const pantryCount = dish.ingredients.filter((ingredient) => ingredient.ingredient_type === 'pantry').length;
+                const groceryCount = dish.ingredients.filter((ingredient) => ingredient.ingredient_type === 'grocery').length;
+                const category = getCategoryOption(dish.category as DishCategory | null);
+                const previewIngredients = dish.ingredients.slice(0, 3);
+                return (
+                  <article key={dish.id} className="relative overflow-hidden rounded-[1.75rem] border border-border bg-white p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)]">
+                    <div className={`absolute right-4 top-4 h-12 w-12 rounded-full ${category?.tint ?? 'bg-muted'} opacity-80`} />
+                    <div className="relative flex items-start justify-between gap-3">
+                      <div><p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">{category?.label ?? 'Uncategorized'}</p><h3 className="mt-2 text-xl font-semibold text-foreground">{dish.name}</h3></div>
+                      <div className="flex gap-2">
+                        <button type="button" onClick={() => openEditForm(dish)} className="rounded-full border border-border bg-white px-3 py-2 text-sm font-semibold text-foreground">Edit</button>
+                        <button type="button" onClick={() => handleDeleteDish(dish)} disabled={pendingDeleteId === dish.id} className="rounded-full border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-900 transition disabled:cursor-not-allowed disabled:opacity-60">{pendingDeleteId === dish.id ? 'Deleting...' : 'Delete'}</button>
+                      </div>
+                    </div>
+                    <div className="relative mt-4 flex flex-wrap gap-2"><span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-foreground">{dish.ingredients.length} ingredients</span><span className="rounded-full bg-secondary/30 px-3 py-1 text-xs font-semibold text-foreground">{groceryCount} grocery</span><span className="rounded-full bg-accent/45 px-3 py-1 text-xs font-semibold text-foreground">{pantryCount} pantry</span></div>
+                    <div className="relative mt-4 flex flex-wrap gap-2">
+                      {previewIngredients.length > 0 ? (
+                        previewIngredients.map((ingredient) => {
+                          const typeStyle = TYPE_STYLES[ingredient.ingredient_type as IngredientType];
+                          return (
+                            <span key={ingredient.id} className={`rounded-full border px-3 py-2 text-xs font-medium ${typeStyle.pill}`}>
+                              {ingredient.name}
+                            </span>
+                          );
+                        })
+                      ) : (
+                        <span className="rounded-full border border-dashed border-border bg-muted/30 px-3 py-2 text-xs font-medium text-muted-foreground">
+                          No ingredients yet
+                        </span>
+                      )}
+                    </div>
+                    {expandedDishIds.has(dish.id) && dish.ingredients.length > 3 ? (
+                      <div className="relative mt-3 flex flex-wrap gap-2">
+                        {dish.ingredients.slice(3).map((ingredient) => {
+                          const typeStyle = TYPE_STYLES[ingredient.ingredient_type as IngredientType];
+                          return (
+                            <span key={ingredient.id} className={`rounded-full border px-3 py-2 text-xs font-medium ${typeStyle.pill}`}>
+                              {ingredient.name}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    ) : null}
+                    {dish.ingredients.length > 3 ? (
+                      <div className="mt-3 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => toggleExpandedDish(dish.id)}
+                          className="rounded-full border border-border bg-white px-3 py-2 text-xs font-medium text-muted-foreground transition hover:-translate-y-0.5 hover:text-foreground"
+                        >
+                          {expandedDishIds.has(dish.id) ? 'Show less' : `+${dish.ingredients.length - 3} more`}
+                        </button>
+                      </div>
+                    ) : null}
+                  </article>
+                );
+              })}
             </div>
           )}
         </div>
-      </section>
-
-      {isLoading ? (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="rounded-3xl border border-border bg-white p-5">
-              <div className="h-4 w-24 rounded bg-muted" />
-              <div className="mt-4 h-7 w-2/3 rounded bg-muted" />
-              <div className="mt-4 h-16 rounded bg-muted" />
+        <div id="dish-editor" className="rounded-[1.75rem] border border-border bg-[rgba(255,255,255,0.96)] p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)]">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Editor</p>
+              <h2 className="mt-2 text-lg font-semibold text-foreground">{formState.id ? 'Edit dish' : 'Create a new dish'}</h2>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">Bulk input first, then adjust the chips if you need to fine-tune types.</p>
             </div>
-          ))}
-        </div>
-      ) : filteredDishes.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-border bg-white/80 p-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-            Empty state
-          </p>
-          <h3 className="mt-3 text-2xl font-semibold text-foreground">
-            {dishes.length === 0 ? 'No dishes yet' : 'No dishes match this filter'}
-          </h3>
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            {dishes.length === 0
-              ? 'Create your first dish to start building meal combos and future grocery lists.'
-              : 'Try a different search term or category, or clear the filters to see everything again.'}
-          </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-3">
-            {dishes.length === 0 ? (
-              <button
-                type="button"
-                onClick={openCreateForm}
-                className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground"
-              >
-                Create first dish
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setSearch('');
-                  setCategoryFilter('all');
-                }}
-                className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground"
-              >
-                Clear filters
-              </button>
-            )}
+            <button type="button" onClick={startNewDish} className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground">Clear form</button>
           </div>
-        </div>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filteredDishes.map((dish) => {
-            const pantryCount = dish.ingredients.filter(
-              (ingredient) => ingredient.ingredient_type === 'pantry'
-            ).length;
-            const groceryCount = dish.ingredients.filter(
-              (ingredient) => ingredient.ingredient_type === 'grocery'
-            ).length;
 
-            return (
-              <article key={dish.id} className="rounded-[1.75rem] border border-border bg-white p-5 shadow-soft">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                      {dish.category ?? 'Uncategorized'}
-                    </p>
-                    <h3 className="mt-2 text-xl font-semibold text-foreground">{dish.name}</h3>
+          <form onSubmit={handleSaveDish} className="mt-5 space-y-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Dish name</span><input value={formState.name} onChange={(e) => setFormState((current) => ({ ...current, name: e.target.value }))} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Stir fry pork" /></label>
+              <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Category</span><select value={formState.category} onChange={(e) => setFormState((current) => ({ ...current, category: e.target.value as DishCategory | '' }))} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"><option value="">No category yet</option>{CATEGORY_OPTIONS.map((category) => <option key={category.value} value={category.value}>{category.label}</option>)}</select></label>
+            </div>
+
+            <div className="rounded-[1.6rem] border border-border bg-muted/18 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div><p className="text-sm font-semibold text-foreground">Ingredients</p><p className="mt-1 text-sm leading-6 text-muted-foreground">Paste one ingredient per line, then convert them into chips.</p></div>
+                <button type="button" onClick={addBulkIngredients} className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5">Convert to ingredients</button>
+              </div>
+
+              <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Bulk ingredient input</span><textarea value={bulkIngredientsText} onChange={(e) => setBulkIngredientsText(e.target.value)} rows={7} placeholder={`Add ingredients, one per line...\n\nExample:\nPork\nGarlic\nBroccoli\nSoy sauce\nOyster sauce`} className="w-full rounded-[1.4rem] border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" /><p className="mt-2 text-xs leading-5 text-muted-foreground">Grocery is the default type when you convert lines into ingredient chips.</p></label>
+                <div className="rounded-[1.4rem] border border-border bg-white p-4"><p className="text-sm font-semibold text-foreground">Common pantry staples</p><div className="mt-3 flex flex-wrap gap-2">{PANTRY_STAPLES.map((staple) => <button key={staple} type="button" onClick={() => addPantryStaple(staple)} className="rounded-full border border-border bg-accent/30 px-3 py-2 text-xs font-semibold text-foreground transition hover:-translate-y-0.5 hover:bg-accent/45">{staple}</button>)}</div></div>
+              </div>
+
+              <div className="mt-4">
+                <div className="flex items-center justify-between gap-3"><p className="text-sm font-semibold text-foreground">Ingredient chips</p><button type="button" onClick={addIngredientRow} className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground">Add manual chip</button></div>
+                {formState.ingredients.length === 0 ? (
+                  <div className="mt-3 rounded-[1.4rem] border border-dashed border-border bg-white px-4 py-6 text-sm leading-6 text-muted-foreground">Convert a few ingredient lines first, or add a manual chip if you want to edit one ingredient at a time.</div>
+                ) : (
+                  <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-2">
+                    {formState.ingredients.map((ingredient) => {
+                      const style = TYPE_STYLES[ingredient.ingredientType];
+                      return (
+                        <div key={ingredient.id} className={`rounded-[1.45rem] border p-3 shadow-[0_8px_18px_rgba(90,60,70,0.05)] ${style.card}`}>
+                          <div className="flex items-start gap-3">
+                            <label className="block min-w-0 flex-1 text-sm"><span className="mb-1 block font-medium text-foreground">Ingredient</span><input value={ingredient.name} onChange={(e) => updateIngredient(ingredient.id, 'name', e.target.value)} placeholder="Garlic" className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" /></label>
+                            <button type="button" onClick={() => removeIngredientRow(ingredient.id)} className="mt-6 rounded-full border border-border bg-white px-3 py-2 text-sm font-semibold text-foreground" aria-label={`Remove ${ingredient.name || 'ingredient'}`}>×</button>
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2"><IngredientTypePill type="grocery" active={ingredient.ingredientType === 'grocery'} onClick={() => updateIngredient(ingredient.id, 'ingredientType', 'grocery')} /><IngredientTypePill type="pantry" active={ingredient.ingredientType === 'pantry'} onClick={() => updateIngredient(ingredient.id, 'ingredientType', 'pantry')} /><IngredientTypePill type="optional" active={ingredient.ingredientType === 'optional'} onClick={() => updateIngredient(ingredient.id, 'ingredientType', 'optional')} /></div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => openEditForm(dish)}
-                      className="rounded-full border border-border bg-white px-3 py-2 text-sm font-semibold text-foreground"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteDish(dish)}
-                      disabled={pendingDeleteId === dish.id}
-                      className="rounded-full border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-900 disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {pendingDeleteId === dish.id ? 'Deleting...' : 'Delete'}
-                    </button>
-                  </div>
-                </div>
+                )}
+              </div>
+            </div>
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-foreground">
-                    {dish.ingredients.length} ingredients
-                  </span>
-                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-900">
-                    {groceryCount} grocery
-                  </span>
-                  <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-900">
-                    {pantryCount} pantry
-                  </span>
-                </div>
+            <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Instructions</span><textarea value={formState.instructions} onChange={(e) => setFormState((current) => ({ ...current, instructions: e.target.value }))} rows={5} className="w-full rounded-[1.4rem] border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Quick cooking steps or notes for future you" /></label>
 
-                <div className="mt-4 space-y-2">
-                  {dish.ingredients.length > 0 ? (
-                    dish.ingredients.map((ingredient) => (
-                      <div
-                        key={ingredient.id}
-                        className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-muted/20 px-3 py-2 text-sm"
-                      >
-                        <span className="font-medium text-foreground">{ingredient.name}</span>
-                        <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                          {ingredient.ingredient_type}
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="rounded-2xl border border-dashed border-border bg-muted/20 px-3 py-4 text-sm text-muted-foreground">
-                      No ingredients yet.
-                    </div>
-                  )}
-                </div>
+            <details className="rounded-[1.4rem] border border-border bg-white p-4"><summary className="cursor-pointer list-none text-sm font-semibold text-foreground">Optional notes</summary><div className="mt-4"><label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Recipe notes</span><textarea value={formState.notes} onChange={(e) => setFormState((current) => ({ ...current, notes: e.target.value }))} rows={3} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Serving ideas, substitutions, prep reminders" /></label></div></details>
 
-                {dish.instructions ? (
-                  <p className="mt-4 text-sm leading-6 text-muted-foreground">{dish.instructions}</p>
-                ) : null}
-                {dish.notes ? (
-                  <p className="mt-3 text-sm leading-6 text-muted-foreground">Note: {dish.notes}</p>
-                ) : null}
-              </article>
-            );
-          })}
+            {formError ? <p className="text-sm text-danger">{formError}</p> : null}
+            <button type="submit" disabled={saveState === 'saving'} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60">{saveState === 'saving' ? (formState.id ? 'Saving changes...' : 'Creating dish...') : formState.id ? 'Save changes' : 'Create dish'}</button>
+          </form>
         </div>
-      )}
+      </section>
 
       {formMessage ? <ToastMessage message={formMessage} onDismiss={() => setFormMessage(null)} /> : null}
     </div>
   );
 }
+
+
+

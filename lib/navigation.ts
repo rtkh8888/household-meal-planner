@@ -12,3 +12,5 @@ export const mainNavItems: NavItem[] = [
   { href: '/grocery', label: 'Groceries', shortLabel: 'Groceries' },
   { href: '/settings', label: 'Settings', shortLabel: 'Settings' }
 ];
+
+export const visibleNavItems = mainNavItems.filter((item) => item.href !== '/combos');

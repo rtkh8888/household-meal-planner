@@ -1,4 +1,4 @@
-# UI/UX Enhancement Instructions — Household Meal Planner App
+﻿# UI/UX Enhancement Instructions â€” Household Meal Planner App
 
 ## Role
 
@@ -89,7 +89,7 @@ Use hierarchy:
 Use:
 
 ```text
-Border radius: 16px–24px for cards
+Border radius: 16pxâ€“24px for cards
 Buttons: rounded-full or 14px+
 Cards: soft shadow, not harsh
 Borders: subtle warm beige
@@ -133,7 +133,7 @@ Pattern ideas:
 Important:
 
 ```text
-The background pattern must be very subtle, around 3%–7% opacity.
+The background pattern must be very subtle, around 3%â€“7% opacity.
 It must never reduce readability.
 Do not use a large obvious logo repeated everywhere.
 ```
@@ -193,7 +193,7 @@ Combos can be accessed from Dishes or included if space allows.
 
 ---
 
-# Page 1 — Dishes Page UX Redesign
+# Page 1 â€” Dishes Page UX Redesign
 
 ## Current Problem
 
@@ -269,7 +269,7 @@ Do not use large repeated input boxes for each ingredient unless editing is need
 
 ## Pantry Quick Add
 
-Add a “Common pantry staples” section with quick-add buttons:
+Add a â€œCommon pantry staplesâ€ section with quick-add buttons:
 
 ```text
 Soy sauce
@@ -308,16 +308,16 @@ On mobile:
 
 ## Dish Page Acceptance Criteria
 
-- [ ] User can add multiple ingredients quickly using line-by-line input.
-- [ ] User can mark ingredients as Grocery/Pantry/Optional without excessive scrolling.
-- [ ] User can quick-add pantry staples.
-- [ ] Dish list does not leave a large empty panel.
-- [ ] Page feels usable on phone and laptop.
-- [ ] Existing dish CRUD logic remains intact.
+- [x] User can add multiple ingredients quickly using line-by-line input.
+- [x] User can mark ingredients as Grocery/Pantry/Optional without excessive scrolling.
+- [x] User can quick-add pantry staples.
+- [x] Dish list does not leave a large empty panel.
+- [x] Page feels usable on phone and laptop.
+- [x] Existing dish CRUD logic remains intact.
 
 ---
 
-# Page 2 — Weekly Planner UX Redesign
+# Page 2 â€” Weekly Planner UX Redesign
 
 ## Current Problem
 
@@ -374,7 +374,7 @@ Example:
 ```text
 Mon
 1
-• 2 meals
+â€¢ 2 meals
 ```
 
 ## Desktop Layout
@@ -390,7 +390,7 @@ Day tabs + selected day detail
 or Option B:
 
 ```text
-Responsive 2–3 column day cards
+Responsive 2â€“3 column day cards
 ```
 
 Do not use a 7-column grid if it causes narrow meal cards.
@@ -491,7 +491,7 @@ Make the form compact and easy to use.
 
 ---
 
-# Page 3 — Grocery List UX Polish
+# Page 3 â€” Grocery List UX Polish
 
 ## Current State
 
@@ -506,8 +506,8 @@ Make it feel more like a friendly shopping list.
 Use a warmer summary card:
 
 ```text
-This Week’s Groceries
-Jun 29 – Jul 5
+This Weekâ€™s Groceries
+Jun 29 â€“ Jul 5
 
 16 main items
 8 pantry staples
@@ -556,7 +556,7 @@ Example:
 
 ```text
 Pantry staples used this week
-Soy sauce · Oyster sauce · Oil · Pepper
+Soy sauce Â· Oyster sauce Â· Oil Â· Pepper
 ```
 
 Use compact beige chips.
@@ -572,7 +572,7 @@ Use compact beige chips.
 
 ---
 
-# Page 4 — Dashboard/Home Polish
+# Page 4 â€” Dashboard/Home Polish
 
 ## Goal
 
@@ -582,8 +582,8 @@ Dashboard should show:
 
 ```text
 Good evening / Welcome back
-Today’s meals
-Tomorrow’s leftovers
+Todayâ€™s meals
+Tomorrowâ€™s leftovers
 Quick actions
 This week summary
 ```
@@ -604,17 +604,17 @@ Empty states should be warm and helpful.
 Example empty state:
 
 ```text
-No meals planned yet 🍳
+No meals planned yet ðŸ³
 Start by adding a dish or planning dinner for this week.
 ```
 
 ---
 
-# Page 5 — Meal Combos UX Polish
+# Page 5 â€” Meal Combos UX Polish
 
 ## Goal
 
-Make combos feel like reusable “meal sets”.
+Make combos feel like reusable â€œmeal setsâ€.
 
 Rename visually if appropriate:
 
@@ -725,7 +725,7 @@ Add a meal or use leftovers.
 
 ```text
 Your grocery list is empty
-Generate groceries from this week’s cooked meals.
+Generate groceries from this weekâ€™s cooked meals.
 ```
 
 ---
@@ -797,7 +797,7 @@ Do not introduce a heavy UI framework unless necessary.
 
 # Suggested Implementation Order
 
-## Phase 1 — Design System
+## Phase 1 â€” Design System
 
 - [ ] Add/adjust CSS variables or Tailwind theme colours.
 - [ ] Create consistent card, button, badge, input styles.
@@ -806,7 +806,7 @@ Do not introduce a heavy UI framework unless necessary.
 - [ ] Update global layout/background.
 - [ ] Improve header/navigation active states.
 
-## Phase 2 — Dishes UX
+## Phase 2 â€” Dishes UX
 
 - [ ] Replace large ingredient rows with bulk ingredient textarea.
 - [ ] Add ingredient chip system.
@@ -815,7 +815,7 @@ Do not introduce a heavy UI framework unless necessary.
 - [ ] Improve dish list cards.
 - [ ] Improve mobile layout.
 
-## Phase 3 — Planner UX
+## Phase 3 â€” Planner UX
 
 - [ ] Replace narrow 7-column layout.
 - [ ] Show Lunch + Dinner by default.
@@ -825,7 +825,7 @@ Do not introduce a heavy UI framework unless necessary.
 - [ ] Improve add meal modal.
 - [ ] Preserve leftover logic.
 
-## Phase 4 — Grocery UX
+## Phase 4 â€” Grocery UX
 
 - [ ] Improve grocery summary card.
 - [ ] Redesign checklist rows.
@@ -834,7 +834,7 @@ Do not introduce a heavy UI framework unless necessary.
 - [ ] Improve manual add item flow.
 - [ ] Show pantry staples as soft chips.
 
-## Phase 5 — Final Polish
+## Phase 5 â€” Final Polish
 
 - [ ] Polish dashboard.
 - [ ] Polish combo cards.
@@ -864,7 +864,7 @@ Do not introduce a heavy UI framework unless necessary.
 - [ ] User can paste multiple ingredients line by line.
 - [ ] User can convert pasted lines into ingredients.
 - [ ] User can mark ingredients as Grocery/Pantry/Optional.
-- [ ] User can quick-add pantry staples.
+- [x] User can quick-add pantry staples.
 - [ ] User can edit/delete ingredients.
 - [ ] User can save dish successfully.
 - [ ] Existing dishes still load correctly.
@@ -930,3 +930,4 @@ Use this command with the dev AI agent:
 ```text
 Implement Phase 1 and Phase 3 first. The highest priority is redesigning the visual system and fixing the weekly planner layout. Do not touch database schema. Do not change grocery generation logic. Preserve all existing Supabase logic.
 ```
+

@@ -4,10 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { LogoutButton } from '@/components/auth/logout-button';
-import { mainNavItems } from '@/lib/navigation';
 import { getSupabaseStatus } from '@/lib/supabase/client';
-
-const mobileNavItems = mainNavItems.filter((item) => item.href !== '/combos');
+import { visibleNavItems } from '@/lib/navigation';
 
 type AppShellProps = {
   title: string;
@@ -102,7 +100,7 @@ export function AppShell(props: AppShellProps) {
 
             <div className="hidden items-center gap-3 lg:flex">
               <nav className="flex flex-wrap items-center gap-2">
-                {mainNavItems.map((item) => (
+                {visibleNavItems.map((item) => (
                   <NavPill
                     key={item.href}
                     href={item.href}
@@ -120,7 +118,7 @@ export function AppShell(props: AppShellProps) {
 
           <div className="mt-4 flex flex-col gap-3 lg:hidden">
             <nav className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {mainNavItems.map((item) => (
+              {visibleNavItems.map((item) => (
                 <NavPill
                   key={item.href}
                   href={item.href}
@@ -158,7 +156,7 @@ export function AppShell(props: AppShellProps) {
 
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-[rgba(255,255,255,0.94)] px-2 py-2 backdrop-blur-md lg:hidden">
         <div className="mx-auto grid max-w-[1200px] grid-cols-5 gap-2">
-          {mobileNavItems.map((item) => (
+          {visibleNavItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
