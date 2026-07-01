@@ -1,5 +1,4 @@
-﻿import Link from 'next/link';
-import { redirect } from 'next/navigation';
+﻿import { redirect } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
 import { PageSection } from '@/components/layout/page-section';
 import { getSupabaseStatus } from '@/lib/supabase/client';
@@ -327,55 +326,29 @@ export default async function DashboardPage() {
   const weekStartDate = getWeekStart(today);
   const weekEndDate = shiftIsoDate(weekStartDate, 6);
 
-  const [
-    householdResult,
-    dishCountResult,
-    comboCountResult,
-    weekSlotsResult,
-    agendaSlotsResult,
-    planWeekResult
-  ] = await Promise.all([
-    supabase
-      .from('households')
-      .select('id, name, default_people_per_meal, default_leftover_enabled')
-      .eq('id', profile.household_id)
-      .single(),
-    supabase.from('dishes').select('id', { count: 'exact', head: true }),
-    supabase.from('meal_combos').select('id', { count: 'exact', head: true }),
-    supabase
-      .from('meal_slots')
-      .select('*')
-      .eq('household_id', profile.household_id)
-      .gte('date', weekStartDate)
-      .lte('date', weekEndDate),
-    supabase
-      .from('meal_slots')
-      .select('*')
-      .eq('household_id', profile.household_id)
-      .gte('date', today)
-      .lte('date', tomorrow),
-    supabase
-      .from('plan_weeks')
-      .select('id')
-      .eq('household_id', profile.household_id)
-      .eq('week_start_date', weekStartDate)
-      .maybeSingle()
-  ]);
-
-  if (householdResult.error || !householdResult.data) {
-    return (
-      <AppShell
-        title="Dashboard"
-        description="A calm home base for your household meal library, weekly plan, leftovers, and grocery flow."
-      >
-        <PageSection eyebrow="Household" title="We could not load your household settings">
-          <p className="text-sm leading-6 text-muted-foreground">
-            The authenticated household could not be loaded right now. Try refreshing the page or signing out and back in.
-          </p>
-        </PageSection>
-      </AppShell>
-    );
-  }
+  const [dishCountResult, comboCountResult, weekSlotsResult, agendaSlotsResult, planWeekResult] =
+    await Promise.all([
+      supabase.from('dishes').select('id', { count: 'exact', head: true }),
+      supabase.from('meal_combos').select('id', { count: 'exact', head: true }),
+      supabase
+        .from('meal_slots')
+        .select('*')
+        .eq('household_id', profile.household_id)
+        .gte('date', weekStartDate)
+        .lte('date', weekEndDate),
+      supabase
+        .from('meal_slots')
+        .select('*')
+        .eq('household_id', profile.household_id)
+        .gte('date', today)
+        .lte('date', tomorrow),
+      supabase
+        .from('plan_weeks')
+        .select('id')
+        .eq('household_id', profile.household_id)
+        .eq('week_start_date', weekStartDate)
+        .maybeSingle()
+    ]);
 
   if (dishCountResult.error || comboCountResult.error || weekSlotsResult.error || agendaSlotsResult.error || planWeekResult.error) {
     return (
@@ -392,7 +365,6 @@ export default async function DashboardPage() {
     );
   }
 
-  const household = householdResult.data;
   const weekSlots = weekSlotsResult.data ?? [];
   const agendaSlots = agendaSlotsResult.data ?? [];
 
@@ -433,20 +405,6 @@ export default async function DashboardPage() {
 
   const stats: DashboardStat[] = [
     {
-      label: 'Dishes',
-      value: String(dishCountResult.count ?? 0),
-      hint: 'Household library ready to plan from',
-      tintClass: 'bg-lavender/65',
-      dotClass: 'bg-lavender'
-    },
-    {
-      label: 'Combos',
-      value: String(comboCountResult.count ?? 0),
-      hint: 'Optional reusable meal bundles',
-      tintClass: 'bg-secondary/55',
-      dotClass: 'bg-secondary'
-    },
-    {
       label: 'Planned meals',
       value: String(weeklyPlannedMeals),
       hint: `${cookedMealCount} cook, ${leftoverMealCount} leftover this week`,
@@ -471,7 +429,7 @@ export default async function DashboardPage() {
         <section className="relative overflow-hidden rounded-[2rem] border border-border bg-white/96 shadow-[0_12px_32px_rgba(90,60,70,0.06)]">
           <div className="absolute -right-14 -top-14 h-40 w-40 rounded-full bg-lavender/35 blur-3xl" />
           <div className="absolute -left-10 bottom-[-3rem] h-36 w-36 rounded-full bg-secondary/30 blur-3xl" />
-          <div className="grid gap-0 lg:grid-cols-[1.08fr_0.92fr]">
+          <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
             <div className="relative p-5 sm:p-6 lg:p-7">
               <div className="flex items-center gap-3">
                 <DashboardHeroIcon />
@@ -480,29 +438,9 @@ export default async function DashboardPage() {
                     This week
                   </p>
                   <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[2.15rem] sm:leading-tight">
-                    Your household is set for {getWeekRangeLabel(weekStartDate)}
+                    {getWeekRangeLabel(weekStartDate)}
                   </h2>
                 </div>
-              </div>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-[0.98rem]">
-                {weeklyPlannedMeals > 0
-                  ? `You have ${weeklyPlannedMeals} planned meal slots this week, with leftovers enabled by default for ${household.default_people_per_meal} people per meal.`
-                  : `No meals are planned yet for this week. Start with dishes, then map out the week and generate groceries from cooked meals.`}
-              </p>
-
-              <div className="mt-6 flex flex-wrap gap-2">
-                <span className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_18px_rgba(90,60,70,0.05)]">
-                  {household.default_people_per_meal} people per meal
-                </span>
-                <span className="rounded-full border border-secondary/40 bg-secondary/28 px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_18px_rgba(90,60,70,0.04)]">
-                  Leftovers {household.default_leftover_enabled ? 'on' : 'off'}
-                </span>
-                <span className="rounded-full border border-lavender/50 bg-lavender/55 px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_18px_rgba(90,60,70,0.04)]">
-                  {getWeekRangeLabel(weekStartDate)}
-                </span>
-                <span className="rounded-full border border-accent/40 bg-accent/55 px-4 py-2 text-sm font-medium text-foreground shadow-[0_8px_18px_rgba(90,60,70,0.04)]">
-                  {household.name || 'Home'}
-                </span>
               </div>
             </div>
 
@@ -543,39 +481,10 @@ export default async function DashboardPage() {
             emptyMessage="Tomorrow is still open. That can be a good time to assign leftovers or line up a quick cook meal."
           />
         </section>
-
-        <PageSection eyebrow="Household defaults" title="Planner behavior at a glance">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[1.5rem] border border-border bg-lavender/35 p-4">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                Default people per meal
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
-                {household.default_people_per_meal}
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-border bg-secondary/32 p-4">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                Leftovers by default
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
-                {household.default_leftover_enabled ? 'On' : 'Off'}
-              </p>
-            </div>
-          </div>
-          <p className="mt-4 text-sm leading-6 text-muted-foreground">
-            You can update both settings anytime from the settings page if your household rhythm changes.
-          </p>
-          <div className="mt-4">
-            <Link
-              href="/settings"
-              className="inline-flex rounded-full border border-border bg-white px-4 py-3 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-lavender/50 hover:shadow-[0_12px_22px_rgba(90,60,70,0.08)]"
-            >
-              Open settings
-            </Link>
-          </div>
-        </PageSection>
       </div>
     </AppShell>
   );
 }
+
+
+
