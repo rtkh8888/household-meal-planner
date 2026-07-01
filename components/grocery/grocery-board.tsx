@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
+
 import { PageSection } from '@/components/layout/page-section';
 import { ToastMessage } from '@/components/ui/toast-message';
 import {
@@ -576,7 +577,7 @@ export function GroceryBoard() {
           <div className="h-20 rounded-3xl bg-muted" />
         </PageSection>
         <PageSection eyebrow="Checklist" title="Preparing grocery items">
-          <div className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {Array.from({ length: 4 }).map((_, index) => (
               <div key={index} className="h-16 rounded-2xl bg-muted" />
             ))}
@@ -587,42 +588,72 @@ export function GroceryBoard() {
   }
 
   return (
-    <div className="space-y-4">
-      <PageSection eyebrow="Week" title="Generate from cooked meals only">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-sm leading-6 text-muted-foreground">
-              Groceries come from cook meal slots and cook batches only. Leftovers do not add duplicate ingredients.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3 text-sm">
-              <div className="rounded-2xl border border-border bg-muted/20 px-4 py-3">
-                <p className="font-semibold text-foreground">{formatWeekRange(weekStartDate)}</p>
-                <p className="mt-1 text-muted-foreground">Week of {weekStartDate}</p>
+    <div className="space-y-5">
+      <PageSection eyebrow="Week" title="This Week’s Groceries">
+        <div className="overflow-hidden rounded-[2rem] border border-border bg-white/95 p-5 shadow-[0_12px_34px_rgba(90,60,70,0.06)] sm:p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                <span className="h-2 w-2 rounded-full bg-primary" />
+                Grocery week
               </div>
-              <div className="rounded-2xl border border-border bg-white px-4 py-3">
-                <p className="font-semibold text-foreground">{totalMainItems} main items</p>
-                <p className="mt-1 text-muted-foreground">{checkedCount} checked off</p>
-              </div>
-              <div className="rounded-2xl border border-border bg-white px-4 py-3">
-                <p className="font-semibold text-foreground">{totalPantryItems} pantry staples</p>
-                <p className="mt-1 text-muted-foreground">{data?.cookedMealCount ?? 0} cooked meals in week</p>
+              <div className="mt-4 flex flex-wrap items-start gap-3">
+                <div className="rounded-[1.5rem] border border-border bg-[linear-gradient(135deg,rgba(244,175,192,0.18),rgba(220,210,243,0.18))] px-5 py-4">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Week range</p>
+                  <p className="mt-2 text-2xl font-semibold text-foreground">{formatWeekRange(weekStartDate)}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Generated from cooked meals only</p>
+                </div>
+                <div className="grid min-w-[220px] flex-1 grid-cols-3 gap-3 sm:min-w-[280px]">
+                  <div className="rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(220,207,252,0.42),rgba(255,255,255,0.92))] px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Main</p>
+                    <p className="mt-2 text-2xl font-semibold text-foreground">{totalMainItems}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">shopping items</p>
+                  </div>
+                  <div className="rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(191,220,203,0.42),rgba(255,255,255,0.92))] px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Pantry</p>
+                    <p className="mt-2 text-2xl font-semibold text-foreground">{totalPantryItems}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">staples</p>
+                  </div>
+                  <div className="rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(248,237,184,0.5),rgba(255,255,255,0.92))] px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Checked</p>
+                    <p className="mt-2 text-2xl font-semibold text-foreground">{checkedCount}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">done</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-            <button type="button" onClick={() => setWeekStartDate((current) => shiftIsoDate(current, -7))} className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground">
-              Previous week
-            </button>
-            <button type="button" onClick={() => setWeekStartDate(getWeekStart(new Date()))} className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground">
-              Today
-            </button>
-            <button type="button" onClick={() => setWeekStartDate((current) => shiftIsoDate(current, 7))} className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground">
-              Next week
-            </button>
-            <button type="button" onClick={() => void handleGenerate()} disabled={isGenerating} className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-60">
-              {isGenerating ? 'Generating...' : 'Generate grocery list'}
-            </button>
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap lg:shrink-0 lg:justify-end">
+              <button
+                type="button"
+                onClick={() => setWeekStartDate((current) => shiftIsoDate(current, -7))}
+                className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-muted/20"
+              >
+                Previous week
+              </button>
+              <button
+                type="button"
+                onClick={() => setWeekStartDate(getWeekStart(new Date()))}
+                className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-muted/20"
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                onClick={() => setWeekStartDate((current) => shiftIsoDate(current, 7))}
+                className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-muted/20"
+              >
+                Next week
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleGenerate()}
+                disabled={isGenerating}
+                className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isGenerating ? 'Generating...' : 'Generate grocery list'}
+              </button>
+            </div>
           </div>
         </div>
       </PageSection>
@@ -635,14 +666,18 @@ export function GroceryBoard() {
       ) : null}
 
       <PageSection eyebrow="Checklist" title="Main grocery list">
-        <form onSubmit={handleAddManualItem} className="mb-4 flex flex-col gap-3 sm:flex-row">
+        <form onSubmit={handleAddManualItem} className="mb-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
           <input
             value={manualItemName}
             onChange={(event) => setManualItemName(event.target.value)}
             placeholder="Add a manual grocery item"
-            className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
+            className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition placeholder:text-muted-foreground/70 focus:border-primary"
           />
-          <button type="submit" disabled={isAddingManual} className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground disabled:cursor-not-allowed disabled:opacity-60">
+          <button
+            type="submit"
+            disabled={isAddingManual}
+            className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-muted/20 disabled:cursor-not-allowed disabled:opacity-60"
+          >
             {isAddingManual ? 'Adding...' : 'Add item'}
           </button>
         </form>
@@ -656,32 +691,43 @@ export function GroceryBoard() {
               : 'No weekly plan exists for this week yet. Plan some cooked meals first, then generate the grocery list.'}
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {data?.mainItems.map((item) => (
-              <div key={item.id} className="flex flex-col gap-3 rounded-2xl border border-border bg-white px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-                <label className="flex min-w-0 items-center gap-3">
+              <div
+                key={item.id}
+                className={`group flex h-full min-h-[72px] flex-col justify-between gap-2 rounded-[1.35rem] border bg-white px-3 py-3 shadow-[0_6px_18px_rgba(90,60,70,0.045)] transition ${
+                  item.is_checked ? 'border-border/70 opacity-65' : 'border-border'
+                }`}
+              >
+                <label className="flex min-w-0 items-center gap-2">
                   <input
                     type="checkbox"
                     checked={item.is_checked}
                     disabled={pendingToggleId === item.id}
                     onChange={() => void handleToggleItem(item)}
-                    className="h-4 w-4 rounded border-border"
+                    className="h-4.5 w-4.5 shrink-0 rounded-full border-border text-primary focus:ring-primary/30"
                   />
-                  <span className={`text-sm font-medium ${item.is_checked ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
-                    {item.name}
+                  <span className="min-w-0">
+                    <span className={`block text-sm font-semibold leading-5 ${item.is_checked ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
+                      {item.name}
+                    </span>
+                    <span className="mt-0.5 block text-[11px] text-muted-foreground sm:hidden">
+                      Tap the checkbox to mark it off.
+                    </span>
                   </span>
                 </label>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-1.5 sm:justify-end">
+                  <span className="rounded-full border border-border bg-muted/40 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                     {item.is_manual ? 'Manual' : 'Generated'}
                   </span>
                   <button
                     type="button"
                     onClick={() => void handleDeleteItem(item)}
                     disabled={pendingDeleteId === item.id}
-                    className="rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-900 disabled:cursor-not-allowed disabled:opacity-60"
+                    aria-label={`Delete ${item.name}`}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-rose-200 bg-rose-50 text-rose-900 transition hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {pendingDeleteId === item.id ? 'Deleting...' : 'Delete'}
+                    <span className={`text-lg leading-none ${pendingDeleteId === item.id ? 'animate-pulse' : ''}`}>×</span>
                   </button>
                 </div>
               </div>
@@ -696,12 +742,21 @@ export function GroceryBoard() {
             No pantry staples were detected from cooked meals for this week yet.
           </div>
         ) : (
-          <div className="flex flex-wrap gap-2">
-            {data?.pantryItems.map((item) => (
-              <span key={item.id} className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-foreground">
-                {item.name}
-              </span>
-            ))}
+          <div className="rounded-[1.75rem] border border-border bg-[linear-gradient(135deg,rgba(255,241,214,0.38),rgba(255,255,255,0.96))] p-4">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
+              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary">•</span>
+              Pantry staples used this week
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {data?.pantryItems.map((item) => (
+                <span key={item.id} className="rounded-full border border-border bg-white px-3 py-1.5 text-sm font-medium text-foreground shadow-[0_4px_10px_rgba(90,60,70,0.04)]">
+                  {item.name}
+                </span>
+              ))}
+            </div>
+            <p className="mt-3 text-xs leading-5 text-muted-foreground">
+              These staples were pulled from cooked meal ingredients and grouped separately so the main checklist stays easy to scan.
+            </p>
           </div>
         )}
       </PageSection>
@@ -709,6 +764,10 @@ export function GroceryBoard() {
     </div>
   );
 }
+
+
+
+
 
 
 

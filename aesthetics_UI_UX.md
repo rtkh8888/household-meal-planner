@@ -563,12 +563,12 @@ Use compact beige chips.
 
 ## Grocery Page Acceptance Criteria
 
-- [ ] Grocery list feels like a shopping checklist, not admin rows.
-- [ ] Delete buttons are less visually dominant.
-- [ ] Checked state is clear.
-- [ ] Manual add item works smoothly.
-- [ ] Pantry staples are shown as soft chips.
-- [ ] Page is very usable on phone.
+- [x] Grocery list feels like a shopping checklist, not admin rows.
+- [x] Delete buttons are less visually dominant.
+- [x] Checked state is clear.
+- [x] Manual add item works smoothly.
+- [x] Pantry staples are shown as soft chips.
+- [x] Page is very usable on phone.
 
 ---
 
@@ -930,5 +930,6 @@ Use this command with the dev AI agent:
 ```text
 Implement Phase 1 and Phase 3 first. The highest priority is redesigning the visual system and fixing the weekly planner layout. Do not touch database schema. Do not change grocery generation logic. Preserve all existing Supabase logic.
 ```
+
 
 
