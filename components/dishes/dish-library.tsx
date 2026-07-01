@@ -110,6 +110,7 @@ export function DishLibrary() {
   const [formMessage, setFormMessage] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [expandedDishIds, setExpandedDishIds] = useState<Set<string>>(() => new Set());
 
   useEffect(() => { void loadDishes(); }, []);
@@ -177,7 +178,7 @@ export function DishLibrary() {
 
   function startNewDish() {
     resetForm();
-    document.getElementById('dish-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setIsEditorOpen(true);
   }
 
   function openEditForm(dish: DishWithIngredients) {
@@ -185,7 +186,11 @@ export function DishLibrary() {
     setBulkIngredientsText('');
     setFormError(null);
     setFormMessage(null);
-    document.getElementById('dish-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setIsEditorOpen(true);
+  }
+
+  function closeEditor() {
+    setIsEditorOpen(false);
   }
 
   function updateIngredient(ingredientId: string, key: 'name' | 'ingredientType', value: string) {
@@ -306,6 +311,7 @@ export function DishLibrary() {
 
     setSaveState('idle');
     resetForm();
+    setIsEditorOpen(false);
     setFormMessage(formState.id ? 'Dish updated.' : 'Dish created.');
     await loadDishes();
   }
@@ -324,7 +330,7 @@ export function DishLibrary() {
 
   return (
     <div className="space-y-4">
-      <section className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
+      <section className="space-y-4">
         <div className="space-y-4">
           <div className="rounded-[1.75rem] border border-border bg-white/92 p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)]">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -350,7 +356,7 @@ export function DishLibrary() {
           </div>
 
           {isLoading ? (
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">{Array.from({ length: 4 }).map((_, index) => <div key={index} className="rounded-[1.75rem] border border-border bg-white p-5"><div className="h-4 w-24 rounded bg-muted" /><div className="mt-4 h-7 w-2/3 rounded bg-muted" /><div className="mt-4 h-16 rounded bg-muted" /></div>)}</div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{Array.from({ length: 4 }).map((_, index) => <div key={index} className="rounded-[1.75rem] border border-border bg-white p-5"><div className="h-4 w-24 rounded bg-muted" /><div className="mt-4 h-7 w-2/3 rounded bg-muted" /><div className="mt-4 h-16 rounded bg-muted" /></div>)}</div>
           ) : filteredDishes.length === 0 ? (
             <div className="rounded-[1.75rem] border border-dashed border-border bg-white/86 p-8 text-center">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Empty state</p>
@@ -359,7 +365,7 @@ export function DishLibrary() {
               <div className="mt-5 flex flex-wrap justify-center gap-3">{dishes.length === 0 ? <button type="button" onClick={startNewDish} className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground">Create first dish</button> : <button type="button" onClick={() => { setSearch(''); setCategoryFilter('all'); }} className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground">Clear filters</button>}</div>
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {filteredDishes.map((dish) => {
                 const pantryCount = dish.ingredients.filter((ingredient) => ingredient.ingredient_type === 'pantry').length;
                 const groceryCount = dish.ingredients.filter((ingredient) => ingredient.ingredient_type === 'grocery').length;
@@ -421,70 +427,81 @@ export function DishLibrary() {
             </div>
           )}
         </div>
-        <div id="dish-editor" className="rounded-[1.75rem] border border-border bg-[rgba(255,255,255,0.96)] p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)]">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Editor</p>
-              <h2 className="mt-2 text-lg font-semibold text-foreground">{formState.id ? 'Edit dish' : 'Create a new dish'}</h2>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">Bulk input first, then adjust the chips if you need to fine-tune types.</p>
-            </div>
-            <button type="button" onClick={startNewDish} className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground">Clear form</button>
-          </div>
-
-          <form onSubmit={handleSaveDish} className="mt-5 space-y-5">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Dish name</span><input value={formState.name} onChange={(e) => setFormState((current) => ({ ...current, name: e.target.value }))} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Stir fry pork" /></label>
-              <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Category</span><select value={formState.category} onChange={(e) => setFormState((current) => ({ ...current, category: e.target.value as DishCategory | '' }))} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"><option value="">No category yet</option>{CATEGORY_OPTIONS.map((category) => <option key={category.value} value={category.value}>{category.label}</option>)}</select></label>
-            </div>
-
-            <div className="rounded-[1.6rem] border border-border bg-muted/18 p-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div><p className="text-sm font-semibold text-foreground">Ingredients</p><p className="mt-1 text-sm leading-6 text-muted-foreground">Paste one ingredient per line, then convert them into chips.</p></div>
-                <button type="button" onClick={addBulkIngredients} className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5">Convert to ingredients</button>
-              </div>
-
-              <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-                <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Bulk ingredient input</span><textarea value={bulkIngredientsText} onChange={(e) => setBulkIngredientsText(e.target.value)} rows={7} placeholder={`Add ingredients, one per line...\n\nExample:\nPork\nGarlic\nBroccoli\nSoy sauce\nOyster sauce`} className="w-full rounded-[1.4rem] border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" /><p className="mt-2 text-xs leading-5 text-muted-foreground">Grocery is the default type when you convert lines into ingredient chips.</p></label>
-                <div className="rounded-[1.4rem] border border-border bg-white p-4"><p className="text-sm font-semibold text-foreground">Common pantry staples</p><div className="mt-3 flex flex-wrap gap-2">{PANTRY_STAPLES.map((staple) => <button key={staple} type="button" onClick={() => addPantryStaple(staple)} className="rounded-full border border-border bg-accent/30 px-3 py-2 text-xs font-semibold text-foreground transition hover:-translate-y-0.5 hover:bg-accent/45">{staple}</button>)}</div></div>
-              </div>
-
-              <div className="mt-4">
-                <div className="flex items-center justify-between gap-3"><p className="text-sm font-semibold text-foreground">Ingredient chips</p><button type="button" onClick={addIngredientRow} className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground">Add manual chip</button></div>
-                {formState.ingredients.length === 0 ? (
-                  <div className="mt-3 rounded-[1.4rem] border border-dashed border-border bg-white px-4 py-6 text-sm leading-6 text-muted-foreground">Convert a few ingredient lines first, or add a manual chip if you want to edit one ingredient at a time.</div>
-                ) : (
-                  <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-2">
-                    {formState.ingredients.map((ingredient) => {
-                      const style = TYPE_STYLES[ingredient.ingredientType];
-                      return (
-                        <div key={ingredient.id} className={`rounded-[1.45rem] border p-3 shadow-[0_8px_18px_rgba(90,60,70,0.05)] ${style.card}`}>
-                          <div className="flex items-start gap-3">
-                            <label className="block min-w-0 flex-1 text-sm"><span className="mb-1 block font-medium text-foreground">Ingredient</span><input value={ingredient.name} onChange={(e) => updateIngredient(ingredient.id, 'name', e.target.value)} placeholder="Garlic" className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" /></label>
-                            <button type="button" onClick={() => removeIngredientRow(ingredient.id)} className="mt-6 rounded-full border border-border bg-white px-3 py-2 text-sm font-semibold text-foreground" aria-label={`Remove ${ingredient.name || 'ingredient'}`}>×</button>
-                          </div>
-                          <div className="mt-3 flex flex-wrap gap-2"><IngredientTypePill type="grocery" active={ingredient.ingredientType === 'grocery'} onClick={() => updateIngredient(ingredient.id, 'ingredientType', 'grocery')} /><IngredientTypePill type="pantry" active={ingredient.ingredientType === 'pantry'} onClick={() => updateIngredient(ingredient.id, 'ingredientType', 'pantry')} /><IngredientTypePill type="optional" active={ingredient.ingredientType === 'optional'} onClick={() => updateIngredient(ingredient.id, 'ingredientType', 'optional')} /></div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Instructions</span><textarea value={formState.instructions} onChange={(e) => setFormState((current) => ({ ...current, instructions: e.target.value }))} rows={5} className="w-full rounded-[1.4rem] border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Quick cooking steps or notes for future you" /></label>
-
-            <details className="rounded-[1.4rem] border border-border bg-white p-4"><summary className="cursor-pointer list-none text-sm font-semibold text-foreground">Optional notes</summary><div className="mt-4"><label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Recipe notes</span><textarea value={formState.notes} onChange={(e) => setFormState((current) => ({ ...current, notes: e.target.value }))} rows={3} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Serving ideas, substitutions, prep reminders" /></label></div></details>
-
-            {formError ? <p className="text-sm text-danger">{formError}</p> : null}
-            <button type="submit" disabled={saveState === 'saving'} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60">{saveState === 'saving' ? (formState.id ? 'Saving changes...' : 'Creating dish...') : formState.id ? 'Save changes' : 'Create dish'}</button>
-          </form>
-        </div>
       </section>
 
+      {isEditorOpen ? (
+        <div className="fixed inset-0 z-40 overflow-y-auto bg-black/35 px-4 py-6 backdrop-blur-sm" onClick={(event) => { if (event.target === event.currentTarget) closeEditor(); }}>
+          <div className="mx-auto max-w-4xl rounded-[2rem] border border-border bg-[rgba(255,255,255,0.98)] p-5 shadow-[0_14px_40px_rgba(90,60,70,0.12)] sm:p-6">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Editor</p>
+                <h2 className="mt-2 text-lg font-semibold text-foreground">{formState.id ? 'Edit dish' : 'Create a new dish'}</h2>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">Bulk input first, then adjust the chips if you need to fine-tune types.</p>
+              </div>
+              <button type="button" onClick={closeEditor} className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground">Close</button>
+            </div>
+
+            <form onSubmit={handleSaveDish} className="mt-5 space-y-5">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Dish name</span><input value={formState.name} onChange={(e) => setFormState((current) => ({ ...current, name: e.target.value }))} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Stir fry pork" /></label>
+                <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Category</span><select value={formState.category} onChange={(e) => setFormState((current) => ({ ...current, category: e.target.value as DishCategory | '' }))} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"><option value="">No category yet</option>{CATEGORY_OPTIONS.map((category) => <option key={category.value} value={category.value}>{category.label}</option>)}</select></label>
+              </div>
+
+              <div className="rounded-[1.6rem] border border-border bg-muted/18 p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                  <div><p className="text-sm font-semibold text-foreground">Ingredients</p><p className="mt-1 text-sm leading-6 text-muted-foreground">Paste one ingredient per line, then convert them into chips.</p></div>
+                  <button type="button" onClick={addBulkIngredients} className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5">Convert to ingredients</button>
+                </div>
+
+                <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                  <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Bulk ingredient input</span><textarea value={bulkIngredientsText} onChange={(e) => setBulkIngredientsText(e.target.value)} rows={7} placeholder={`Add ingredients, one per line...\n\nExample:\nPork\nGarlic\nBroccoli\nSoy sauce\nOyster sauce`} className="w-full rounded-[1.4rem] border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" /><p className="mt-2 text-xs leading-5 text-muted-foreground">Grocery is the default type when you convert lines into ingredient chips.</p></label>
+                  <div className="rounded-[1.4rem] border border-border bg-white p-4"><p className="text-sm font-semibold text-foreground">Common pantry staples</p><div className="mt-3 flex flex-wrap gap-2">{PANTRY_STAPLES.map((staple) => <button key={staple} type="button" onClick={() => addPantryStaple(staple)} className="rounded-full border border-border bg-accent/30 px-3 py-2 text-xs font-semibold text-foreground transition hover:-translate-y-0.5 hover:bg-accent/45">{staple}</button>)}</div></div>
+                </div>
+
+                <div className="mt-4">
+                  <div className="flex items-center justify-between gap-3"><p className="text-sm font-semibold text-foreground">Ingredient chips</p><button type="button" onClick={addIngredientRow} className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground">Add manual chip</button></div>
+                  {formState.ingredients.length === 0 ? (
+                    <div className="mt-3 rounded-[1.4rem] border border-dashed border-border bg-white px-4 py-6 text-sm leading-6 text-muted-foreground">Convert a few ingredient lines first, or add a manual chip if you want to edit one ingredient at a time.</div>
+                  ) : (
+                    <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-2">
+                      {formState.ingredients.map((ingredient) => {
+                        const style = TYPE_STYLES[ingredient.ingredientType];
+                        return (
+                          <div key={ingredient.id} className={`rounded-[1.45rem] border p-3 shadow-[0_8px_18px_rgba(90,60,70,0.05)] ${style.card}`}>
+                            <div className="flex items-start gap-3">
+                              <label className="block min-w-0 flex-1 text-sm"><span className="mb-1 block font-medium text-foreground">Ingredient</span><input value={ingredient.name} onChange={(e) => updateIngredient(ingredient.id, 'name', e.target.value)} placeholder="Garlic" className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" /></label>
+                              <button type="button" onClick={() => removeIngredientRow(ingredient.id)} className="mt-6 rounded-full border border-border bg-white px-3 py-2 text-sm font-semibold text-foreground" aria-label={`Remove ${ingredient.name || 'ingredient'}`}>x</button>
+                            </div>
+                            <div className="mt-3 flex flex-wrap gap-2"><IngredientTypePill type="grocery" active={ingredient.ingredientType === 'grocery'} onClick={() => updateIngredient(ingredient.id, 'ingredientType', 'grocery')} /><IngredientTypePill type="pantry" active={ingredient.ingredientType === 'pantry'} onClick={() => updateIngredient(ingredient.id, 'ingredientType', 'pantry')} /><IngredientTypePill type="optional" active={ingredient.ingredientType === 'optional'} onClick={() => updateIngredient(ingredient.id, 'ingredientType', 'optional')} /></div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Instructions</span><textarea value={formState.instructions} onChange={(e) => setFormState((current) => ({ ...current, instructions: e.target.value }))} rows={5} className="w-full rounded-[1.4rem] border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Quick cooking steps or notes for future you" /></label>
+
+              <details className="rounded-[1.4rem] border border-border bg-white p-4"><summary className="cursor-pointer list-none text-sm font-semibold text-foreground">Optional notes</summary><div className="mt-4"><label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Recipe notes</span><textarea value={formState.notes} onChange={(e) => setFormState((current) => ({ ...current, notes: e.target.value }))} rows={3} className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" placeholder="Serving ideas, substitutions, prep reminders" /></label></div></details>
+
+              {formError ? <p className="text-sm text-danger">{formError}</p> : null}
+              <button type="submit" disabled={saveState === 'saving'} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60">{saveState === 'saving' ? (formState.id ? 'Saving changes...' : 'Creating dish...') : formState.id ? 'Save changes' : 'Create dish'}</button>
+            </form>
+          </div>
+        </div>
+      ) : null}
       {formMessage ? <ToastMessage message={formMessage} onDismiss={() => setFormMessage(null)} /> : null}
     </div>
   );
 }
+
+
+
+
+
+
+
 
 
 
