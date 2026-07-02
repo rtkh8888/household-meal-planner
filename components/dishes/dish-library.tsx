@@ -21,24 +21,24 @@ type FormState = { id: string | null; name: string; category: DishCategory | '';
 
 type SaveState = 'idle' | 'saving';
 
-const CATEGORY_OPTIONS: Array<{ value: DishCategory; label: string; tint: string }> = [
-  { value: 'protein', label: 'Protein', tint: 'bg-secondary/55' },
-  { value: 'vegetable', label: 'Vegetable', tint: 'bg-lavender/60' },
-  { value: 'carb', label: 'Carb', tint: 'bg-accent/65' },
-  { value: 'soup', label: 'Soup', tint: 'bg-peach/70' },
-  { value: 'side', label: 'Side', tint: 'bg-lime/65' },
-  { value: 'one_pot', label: 'One pot', tint: 'bg-rose-soft/75' },
-  { value: 'breakfast', label: 'Breakfast', tint: 'bg-secondary/45' },
-  { value: 'snack', label: 'Snack', tint: 'bg-lavender/50' },
-  { value: 'other', label: 'Other', tint: 'bg-muted' }
+const CATEGORY_OPTIONS: Array<{ value: DishCategory; label: string }> = [
+  { value: 'protein', label: 'Protein' },
+  { value: 'vegetable', label: 'Vegetable' },
+  { value: 'carb', label: 'Carb' },
+  { value: 'soup', label: 'Soup' },
+  { value: 'side', label: 'Side' },
+  { value: 'one_pot', label: 'One pot' },
+  { value: 'breakfast', label: 'Breakfast' },
+  { value: 'snack', label: 'Snack' },
+  { value: 'other', label: 'Other' }
 ];
 
 const PANTRY_STAPLES = ['Soy sauce', 'Oyster sauce', 'Oil', 'Salt', 'Pepper', 'Sugar', 'Sesame oil', 'Cornstarch', 'Vinegar', 'Garlic powder'] as const;
 const TYPE_LABELS: Record<IngredientType, string> = { grocery: 'Grocery', pantry: 'Pantry', optional: 'Optional' };
 const TYPE_STYLES: Record<IngredientType, { card: string; active: string; pill: string }> = {
-  grocery: { card: 'bg-secondary/18 border-secondary/35', active: 'bg-secondary/70 border-secondary/50 text-foreground', pill: 'bg-secondary/55 text-foreground' },
-  pantry: { card: 'bg-accent/24 border-accent/35', active: 'bg-accent/80 border-accent/55 text-foreground', pill: 'bg-accent/70 text-foreground' },
-  optional: { card: 'bg-primary/14 border-primary/28', active: 'bg-primary/72 border-primary/50 text-foreground', pill: 'bg-primary/55 text-foreground' }
+  grocery: { card: 'bg-primary/12 border-primary/24', active: 'bg-primary/18 border-primary/35 text-foreground', pill: 'bg-primary/16 text-foreground' },
+  pantry: { card: 'bg-accent/26 border-accent/35', active: 'bg-accent/42 border-accent/50 text-foreground', pill: 'bg-accent/28 text-foreground' },
+  optional: { card: 'bg-secondary/14 border-secondary/24', active: 'bg-secondary/22 border-secondary/35 text-foreground', pill: 'bg-secondary/18 text-foreground' }
 };
 
 function createIngredientDraft(overrides?: Partial<IngredientDraft>): IngredientDraft {
@@ -90,7 +90,7 @@ function IngredientTypePill({ type, active, onClick }: { type: IngredientType; a
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${active ? style.active : 'border-border bg-white text-muted-foreground hover:border-lavender/40 hover:text-foreground'}`}
+      className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${active ? style.active : 'border-border bg-white text-muted-foreground hover:border-primary/35 hover:text-foreground'}`}
     >
       {TYPE_LABELS[type]}
     </button>
@@ -348,7 +348,7 @@ export function DishLibrary() {
 
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="rounded-full border border-border bg-muted px-3 py-2 text-xs font-semibold text-foreground">{dishes.length} dishes total</span>
-              <span className="rounded-full border border-lavender/40 bg-lavender/55 px-3 py-2 text-xs font-semibold text-foreground">{filteredDishes.length} showing</span>
+              <span className="rounded-full border border-primary/18 bg-primary/12 px-3 py-2 text-xs font-semibold text-foreground">{filteredDishes.length} showing</span>
               <span className="rounded-full border border-secondary/40 bg-secondary/30 px-3 py-2 text-xs font-semibold text-foreground">Pantry-aware ingredients</span>
             </div>
 
@@ -373,12 +373,11 @@ export function DishLibrary() {
                 const previewIngredients = dish.ingredients.slice(0, 3);
                 return (
                   <article key={dish.id} className="relative overflow-hidden rounded-[1.75rem] border border-border bg-white p-5 shadow-[0_10px_30px_rgba(90,60,70,0.06)]">
-                    <div className={`absolute right-4 top-4 h-12 w-12 rounded-full ${category?.tint ?? 'bg-muted'} opacity-80`} />
                     <div className="relative flex items-start justify-between gap-3">
                       <div><p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">{category?.label ?? 'Uncategorized'}</p><h3 className="mt-2 text-xl font-semibold text-foreground">{dish.name}</h3></div>
                       <div className="flex gap-2">
                         <button type="button" onClick={() => openEditForm(dish)} className="rounded-full border border-border bg-white px-3 py-2 text-sm font-semibold text-foreground">Edit</button>
-                        <button type="button" onClick={() => handleDeleteDish(dish)} disabled={pendingDeleteId === dish.id} className="rounded-full border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-900 transition disabled:cursor-not-allowed disabled:opacity-60">{pendingDeleteId === dish.id ? 'Deleting...' : 'Delete'}</button>
+                        <button type="button" onClick={() => handleDeleteDish(dish)} disabled={pendingDeleteId === dish.id} className="rounded-full border border-border bg-white px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:border-primary/30 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-60">{pendingDeleteId === dish.id ? 'Deleting...' : 'Delete'}</button>
                       </div>
                     </div>
                     <div className="relative mt-4 flex flex-wrap gap-2"><span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-foreground">{dish.ingredients.length} ingredients</span><span className="rounded-full bg-secondary/30 px-3 py-1 text-xs font-semibold text-foreground">{groceryCount} grocery</span><span className="rounded-full bg-accent/45 px-3 py-1 text-xs font-semibold text-foreground">{pantryCount} pantry</span></div>
@@ -495,6 +494,11 @@ export function DishLibrary() {
     </div>
   );
 }
+
+
+
+
+
 
 
 

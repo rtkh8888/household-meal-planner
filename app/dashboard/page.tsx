@@ -211,7 +211,7 @@ function DashboardMealList({
             >
               <div className="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 <span>{toTitleCase(slot.meal_type)}</span>
-                <span className="rounded-full border border-lime/50 bg-lime/55 px-3 py-1 tracking-[0.14em] text-foreground">
+                <span className="rounded-full border border-primary/18 bg-primary/12 px-3 py-1 tracking-[0.14em] text-foreground">
                   {slot.entry_type === 'cook' ? 'Cook' : 'Leftover'}
                 </span>
               </div>
@@ -244,7 +244,7 @@ function DashboardMealList({
 
 function DashboardHeroIcon() {
   return (
-    <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(220,207,252,0.3))] shadow-[0_12px_24px_rgba(90,60,70,0.08)]">
+    <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(200,220,200,0.3))] shadow-[0_12px_24px_rgba(90,60,70,0.08)]">
       <svg viewBox="0 0 48 48" className="h-8 w-8 text-primary" fill="none" aria-hidden="true">
         <path
           d="M14.5 24.5C14.5 17.6 19.8 12 26.4 12c4.8 0 8.9 2.9 10.8 7"
@@ -415,8 +415,8 @@ export default async function DashboardPage() {
       label: 'Groceries',
       value: String(groceryItemCount),
       hint: 'Main grocery items for this week',
-      tintClass: 'bg-peach/70',
-      dotClass: 'bg-peach'
+      tintClass: 'bg-secondary/14',
+      dotClass: 'bg-secondary'
     }
   ];
 
@@ -427,8 +427,8 @@ export default async function DashboardPage() {
     >
       <div className="space-y-5 lg:space-y-6">
         <section className="relative overflow-hidden rounded-[2rem] border border-border bg-white/96 shadow-[0_12px_32px_rgba(90,60,70,0.06)]">
-          <div className="absolute -right-14 -top-14 h-40 w-40 rounded-full bg-lavender/35 blur-3xl" />
-          <div className="absolute -left-10 bottom-[-3rem] h-36 w-36 rounded-full bg-secondary/30 blur-3xl" />
+          <div className="absolute -right-14 -top-14 h-40 w-40 rounded-full bg-secondary/12 blur-3xl" />
+          <div className="absolute -left-10 bottom-[-3rem] h-36 w-36 rounded-full bg-primary/16 blur-3xl" />
           <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
             <div className="relative p-5 sm:p-6 lg:p-7">
               <div className="flex items-center gap-3">
@@ -485,6 +485,10 @@ export default async function DashboardPage() {
     </AppShell>
   );
 }
+
+
+
+
 
 
 

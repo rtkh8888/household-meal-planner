@@ -78,16 +78,16 @@ const MEAL_TYPE_ACCENTS: Record<
   }
 > = {
   breakfast: {
-    section: 'border-lavender/50 bg-lavender/18',
-    badge: 'bg-lavender/55 text-foreground'
+    section: 'border-primary/24 bg-white/90',
+    badge: 'bg-primary/24 text-foreground'
   },
   lunch: {
-    section: 'border-secondary/45 bg-secondary/14',
-    badge: 'bg-secondary/60 text-foreground'
+    section: 'border-secondary/24 bg-white/90',
+    badge: 'bg-secondary/24 text-foreground'
   },
   dinner: {
-    section: 'border-peach/55 bg-peach/18',
-    badge: 'bg-peach/75 text-foreground'
+    section: 'border-accent/24 bg-white/90',
+    badge: 'bg-accent/40 text-foreground'
   }
 };
 
@@ -1104,11 +1104,11 @@ export function PlannerBoard() {
             </div>
             <div className="flex flex-col items-end gap-2 lg:items-start">
               {day.isToday ? (
-                <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                <span className="rounded-full bg-secondary/16 px-3 py-1 text-xs font-semibold text-foreground">
                   Today
                 </span>
               ) : null}
-              <span className="rounded-full bg-muted/60 px-3 py-1 text-xs font-semibold text-muted-foreground">
+              <span className="rounded-full bg-accent/20 px-3 py-1 text-xs font-semibold text-foreground">
                 {dayCount === 0 ? 'No meals' : `${dayCount} meals`}
               </span>
             </div>
@@ -1481,6 +1481,8 @@ export function PlannerBoard() {
     </div>
   );
 }
+
+
 
 
 

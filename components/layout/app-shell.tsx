@@ -15,7 +15,7 @@ type AppShellProps = {
 
 function MealPlannerLogo() {
   return (
-    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(220,207,252,0.32))] shadow-[0_12px_24px_rgba(90,60,70,0.08)]">
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(200,220,200,0.32))] shadow-[0_12px_24px_rgba(90,60,70,0.08)]">
       <svg viewBox="0 0 48 48" className="h-7 w-7 text-primary" fill="none" aria-hidden="true">
         <path
           d="M14.5 24.5C14.5 17.6 19.8 12 26.4 12c4.8 0 8.9 2.9 10.8 7"
@@ -65,8 +65,8 @@ function NavPill({
         compact ? 'px-3 py-2 text-xs' : ''
       } ${
         active
-          ? 'border-lavender/80 bg-lavender/55 text-foreground shadow-[0_10px_22px_rgba(90,60,70,0.08)]'
-          : 'border-border bg-white/90 text-muted-foreground hover:-translate-y-0.5 hover:border-lavender/40 hover:bg-white hover:text-foreground hover:shadow-[0_12px_24px_rgba(90,60,70,0.07)]'
+          ? 'border-secondary/75 bg-secondary/45 text-foreground shadow-[0_10px_22px_rgba(234,199,199,0.12)]'
+          : 'border-border bg-white/90 text-muted-foreground hover:-translate-y-0.5 hover:border-primary/35 hover:bg-white hover:text-foreground hover:shadow-[0_12px_24px_rgba(90,60,70,0.07)]'
       }`}
     >
       {compact ? shortLabel : label}
@@ -111,7 +111,7 @@ export function AppShell(props: AppShellProps) {
                 ))}
               </nav>
               <div className="ml-1 border-l border-border pl-3">
-                <LogoutButton className="border-border bg-white/90 px-4 py-2 text-sm text-muted-foreground shadow-none hover:border-lavender/40 hover:text-foreground" />
+                <LogoutButton className="border-border bg-white/90 px-4 py-2 text-sm text-muted-foreground shadow-none hover:border-primary/35 hover:text-foreground" />
               </div>
             </div>
           </div>
@@ -133,7 +133,7 @@ export function AppShell(props: AppShellProps) {
               <p className="text-xs leading-5 text-muted-foreground">
                 Keep the whole household moving from one cozy workspace.
               </p>
-              <LogoutButton className="border-border bg-white/90 px-3 py-2 text-xs text-muted-foreground shadow-none hover:border-lavender/40 hover:text-foreground" />
+              <LogoutButton className="border-border bg-white/90 px-3 py-2 text-xs text-muted-foreground shadow-none hover:border-primary/35 hover:text-foreground" />
             </div>
           </div>
         </div>
@@ -163,7 +163,7 @@ export function AppShell(props: AppShellProps) {
               aria-current={pathname === item.href || pathname.startsWith(`${item.href}/`) ? 'page' : undefined}
               className={`rounded-[1.15rem] border px-2 py-3 text-center text-[0.72rem] font-semibold leading-none transition ${
                 pathname === item.href || pathname.startsWith(`${item.href}/`)
-                  ? 'border-lavender/80 bg-lavender/55 text-foreground shadow-[0_8px_18px_rgba(220,207,252,0.2)]'
+                  ? 'border-secondary/75 bg-secondary/45 text-foreground shadow-[0_8px_18px_rgba(234,199,199,0.12)]'
                   : 'border-border bg-white/96 text-muted-foreground'
               }`}
             >
@@ -175,3 +175,5 @@ export function AppShell(props: AppShellProps) {
     </div>
   );
 }
+
+
