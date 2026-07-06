@@ -37,7 +37,7 @@ const config: Config = {
       },
       backgroundImage: {
         'shell-radial':
-          'radial-gradient(circle at top left, rgba(114, 185, 66, 0.08), transparent 32%), radial-gradient(circle at top right, rgba(114, 185, 66, 0.06), transparent 30%), radial-gradient(circle at bottom left, rgba(245, 248, 242, 0.9), transparent 28%), radial-gradient(circle at bottom right, rgba(114, 185, 66, 0.04), transparent 28%)'
+          'radial-gradient(circle at top left, rgba(139, 115, 93, 0.08), transparent 32%), radial-gradient(circle at top right, rgba(139, 115, 93, 0.06), transparent 30%), radial-gradient(circle at bottom left, rgba(241, 234, 223, 0.9), transparent 28%), radial-gradient(circle at bottom right, rgba(139, 115, 93, 0.04), transparent 28%)'
       }
     }
   },

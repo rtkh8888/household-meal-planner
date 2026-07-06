@@ -83,11 +83,11 @@ const MEAL_TYPE_ACCENTS: Record<
   },
   lunch: {
     section: 'border-[#E5E7EB] bg-white shadow-[0_4px_16px_rgba(31,41,51,0.06)]',
-    badge: 'bg-[#EAF6E2] text-[#2F6F22]'
+    badge: 'bg-[#F1EADF] text-[#4F453B]'
   },
   dinner: {
     section: 'border-[#E5E7EB] bg-white shadow-[0_4px_16px_rgba(31,41,51,0.06)]',
-    badge: 'bg-[#EAF6E2] text-[#2F6F22]'
+    badge: 'bg-[#F1EADF] text-[#4F453B]'
   }
 };
 
@@ -976,11 +976,11 @@ export function PlannerBoard() {
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-2">
             <div className="flex flex-wrap gap-2">
-              <span className={`rounded-full border px-3 py-1 text-xs font-bold tracking-[0.14em] ${slot.entry_type === 'cook' ? 'border-[#72B942] bg-[#72B942] text-white' : 'border-[#72B942] bg-white text-[#3F7D2A]'}`}>
+              <span className={`rounded-full border px-3 py-1 text-xs font-bold tracking-[0.14em] ${slot.entry_type === 'cook' ? 'border-[#8B735D] bg-[#8B735D] text-white' : 'border-[#8B735D] bg-white text-[#4F453B]'}`}>
                 {slot.entry_type === 'cook' ? 'Cook' : 'Leftover'}
               </span>
               {slot.entry_type === 'cook' && !isPlannerGeneratedCombo(slot.combo) ? (
-                <span className="rounded-full border border-[#D8EBCF] bg-white px-3 py-1 text-xs font-semibold text-[#3F7D2A]">
+                <span className="rounded-full border border-[#D3C3AE] bg-white px-3 py-1 text-xs font-semibold text-[#4F453B]">
                   Manual
                 </span>
               ) : null}
@@ -1001,7 +1001,7 @@ export function PlannerBoard() {
             {visibleDishes.map((dish) => (
               <span
                 key={`${slot.id}-${dish.id}`}
-                className="rounded-full border border-[#C9E5BC] bg-[#EAF6E2] px-3 py-2 text-xs font-semibold text-[#2F6F22]"
+                className="rounded-full border border-[#E6D8C7] bg-[#F1EADF] px-3 py-2 text-xs font-semibold text-[#4F453B]"
               >
                 {dish.name}
               </span>
@@ -1066,7 +1066,7 @@ export function PlannerBoard() {
             type="button"
             onClick={() => openAddMeal(day.isoDate, mealType)}
             disabled={data.dishes.length === 0}
-            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5 hover:bg-[#3F9632] disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-full border border-[#72B942] bg-[#EEF7EA] px-4 py-2 text-sm font-semibold text-[#3F7D2A] transition hover:-translate-y-0.5 hover:bg-[#E4F3DD] disabled:cursor-not-allowed disabled:opacity-60"
           >
             Add meal
           </button>
@@ -1103,11 +1103,11 @@ export function PlannerBoard() {
             </div>
             <div className="flex flex-col items-end gap-2 lg:items-start">
               {day.isToday ? (
-                <span className="rounded-full border border-[#D8EBCF] bg-white px-3 py-1 text-xs font-semibold text-[#3F7D2A]">
+                <span className="rounded-full border border-[#D3C3AE] bg-white px-3 py-1 text-xs font-semibold text-[#4F453B]">
                   Today
                 </span>
               ) : null}
-              <span className="rounded-full border border-[#D8EBCF] bg-white px-3 py-1 text-xs font-semibold text-[#3F7D2A]">
+              <span className="rounded-full border border-[#D3C3AE] bg-white px-3 py-1 text-xs font-semibold text-[#4F453B]">
                 {dayCount === 0 ? 'No meals' : `${dayCount} meals`}
               </span>
             </div>
@@ -1155,7 +1155,7 @@ export function PlannerBoard() {
     <div className="space-y-5">
       <section className="rounded-[2rem] border border-border bg-white/90 p-5 shadow-soft">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="rounded-[1.35rem] border border-[#D8EBCF] bg-white px-5 py-4 text-base font-semibold text-[#3F7D2A] shadow-[0_8px_18px_rgba(90,60,70,0.05)] sm:text-lg">
+          <div className="rounded-[1.35rem] border border-[#D3C3AE] bg-white px-5 py-4 text-base font-semibold text-[#4F453B] shadow-[0_8px_18px_rgba(90,60,70,0.05)] sm:text-lg">
             {formatWeekRange(weekStartDate)}
           </div>
 
@@ -1164,21 +1164,21 @@ export function PlannerBoard() {
               <button
                 type="button"
                 onClick={() => setWeekStartDate((current) => shiftIsoDate(current, -7))}
-                className="rounded-full border border-[#D8EBCF] bg-white px-4 py-3 text-sm font-semibold text-[#3F7D2A]"
+                className="rounded-full border border-[#D3C3AE] bg-white px-4 py-3 text-sm font-semibold text-[#4F453B]"
               >
                 Previous week
               </button>
               <button
                 type="button"
                 onClick={() => setWeekStartDate(getWeekStart(new Date()))}
-                className="rounded-full border border-[#D8EBCF] bg-white px-4 py-3 text-sm font-semibold text-[#3F7D2A]"
+                className="rounded-full border border-[#D3C3AE] bg-white px-4 py-3 text-sm font-semibold text-[#4F453B]"
               >
                 Today
               </button>
               <button
                 type="button"
                 onClick={() => setWeekStartDate((current) => shiftIsoDate(current, 7))}
-                className="rounded-full border border-[#D8EBCF] bg-white px-4 py-3 text-sm font-semibold text-[#3F7D2A]"
+                className="rounded-full border border-[#D3C3AE] bg-white px-4 py-3 text-sm font-semibold text-[#4F453B]"
               >
                 Next week
               </button>
@@ -1186,7 +1186,7 @@ export function PlannerBoard() {
           </div>
         </div>
         <div className="mt-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-end">
-          <label className="inline-flex items-center gap-3 rounded-full border border-[#D8EBCF] bg-white px-4 py-3 text-sm font-medium text-[#3F7D2A]">
+          <label className="inline-flex items-center gap-3 rounded-full border border-[#D3C3AE] bg-white px-4 py-3 text-sm font-medium text-[#4F453B]">
             <input
               type="checkbox"
               checked={showBreakfast}
@@ -1455,7 +1455,7 @@ export function PlannerBoard() {
               <button
                 type="submit"
                 disabled={isSaving}
-                className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-[#72B942] bg-[#EEF7EA] px-4 py-3 text-sm font-semibold text-[#3F7D2A] transition hover:-translate-y-0.5 hover:bg-[#E4F3DD] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSaving
                   ? isEditing

@@ -211,7 +211,7 @@ function DashboardMealList({
             >
               <div className="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 <span>{toTitleCase(slot.meal_type)}</span>
-                <span className={`rounded-full border px-3 py-1 font-bold tracking-[0.14em] ${slot.entry_type === 'cook' ? 'border-[#72B942] bg-[#72B942] text-white' : 'border-[#72B942] bg-white text-[#3F7D2A]'}`}>
+                <span className={`rounded-full border px-3 py-1 font-bold tracking-[0.14em] ${slot.entry_type === 'cook' ? 'border-[#8B735D] bg-[#8B735D] text-white' : 'border-[#8B735D] bg-white text-[#4F453B]'}`}>
                   {slot.entry_type === 'cook' ? 'Cook' : 'Leftover'}
                 </span>
               </div>
@@ -227,7 +227,7 @@ function DashboardMealList({
                   {slot.dishNames.map((dishName) => (
                     <span
                       key={`${slot.id}-${dishName}`}
-                      className="rounded-full border border-[#C9E5BC] bg-[#EAF6E2] px-3 py-2 text-xs font-semibold text-[#2F6F22]"
+                      className="rounded-full border border-[#E6D8C7] bg-[#F1EADF] px-3 py-2 text-xs font-semibold text-[#4F453B]"
                     >
                       {dishName}
                     </span>
@@ -378,14 +378,14 @@ export default async function DashboardPage() {
       value: String(weeklyPlannedMeals),
       hint: `${cookedMealCount} cook, ${leftoverMealCount} leftover this week`,
       tintClass: 'bg-white',
-      dotClass: 'bg-[#3F7D2A]'
+      dotClass: 'bg-[#4F453B]'
     },
     {
       label: 'Groceries',
       value: String(groceryItemCount),
       hint: 'Main grocery items for this week',
       tintClass: 'bg-white',
-      dotClass: 'bg-[#3F7D2A]'
+      dotClass: 'bg-[#4F453B]'
     }
   ];
 
@@ -402,7 +402,7 @@ export default async function DashboardPage() {
             <div className="relative p-5 sm:p-6 lg:p-7">
               <div className="flex items-center">
                 <div>
-                  <span className="inline-flex rounded-full border border-[#D8EBCF] bg-white px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#3F7D2A]">This week</span>
+                  <span className="inline-flex rounded-full border border-[#D3C3AE] bg-white px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#4F453B]">This week</span>
                   <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[2.15rem] sm:leading-tight">
                     {getWeekRangeLabel(weekStartDate)}
                   </h2>
@@ -419,7 +419,7 @@ export default async function DashboardPage() {
                   >
                     <div className="absolute right-3 top-3 h-10 w-10 rounded-full bg-white/45 blur-[1px]" />
                     <div className={`h-2.5 w-2.5 rounded-full ${stat.dotClass}`} />
-                    <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#3F7D2A]">
+                    <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#4F453B]">
                       {stat.label}
                     </p>
                     <p className="mt-2 text-3xl font-semibold tracking-tight text-[#1F2933]">{stat.value}</p>

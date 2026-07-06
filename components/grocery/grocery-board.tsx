@@ -593,29 +593,29 @@ export function GroceryBoard() {
         <div className="overflow-hidden rounded-[2rem] border border-border bg-white/95 p-5 shadow-[0_12px_34px_rgba(90,60,70,0.06)] sm:p-6">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#D8EBCF] bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#3F7D2A]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#D3C3AE] bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#4F453B]">
                 <span className="h-2 w-2 rounded-full bg-primary" />
                 Grocery week
               </div>
               <div className="mt-4 flex flex-wrap items-start gap-3">
-                <div className="rounded-[1.5rem] border border-[#D8EBCF] bg-white px-5 py-4">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#3F7D2A]">Week range</p>
+                <div className="rounded-[1.5rem] border border-[#D3C3AE] bg-white px-5 py-4">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#4F453B]">Week range</p>
                   <p className="mt-2 text-2xl font-semibold text-[#1F2933]">{formatWeekRange(weekStartDate)}</p>
                   <p className="mt-1 text-sm text-[#6B7280]">Generated from cooked meals only</p>
                 </div>
                 <div className="grid min-w-[220px] flex-1 grid-cols-3 gap-3 sm:min-w-[280px]">
-                  <div className="rounded-[1.35rem] border border-[#D8EBCF] bg-white px-4 py-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3F7D2A]">Main</p>
+                  <div className="rounded-[1.35rem] border border-[#D3C3AE] bg-white px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4F453B]">Main</p>
                     <p className="mt-2 text-2xl font-semibold text-[#1F2933]">{totalMainItems}</p>
                     <p className="mt-1 text-xs text-[#6B7280]">shopping items</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-[#D8EBCF] bg-white px-4 py-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3F7D2A]">Pantry</p>
+                  <div className="rounded-[1.35rem] border border-[#D3C3AE] bg-white px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4F453B]">Pantry</p>
                     <p className="mt-2 text-2xl font-semibold text-[#1F2933]">{totalPantryItems}</p>
                     <p className="mt-1 text-xs text-[#6B7280]">staples</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-[#D8EBCF] bg-white px-4 py-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3F7D2A]">Checked</p>
+                  <div className="rounded-[1.35rem] border border-[#D3C3AE] bg-white px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4F453B]">Checked</p>
                     <p className="mt-2 text-2xl font-semibold text-[#1F2933]">{checkedCount}</p>
                     <p className="mt-1 text-xs text-[#6B7280]">done</p>
                   </div>
@@ -649,7 +649,7 @@ export function GroceryBoard() {
                 type="button"
                 onClick={() => void handleGenerate()}
                 disabled={isGenerating}
-                className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-[#72B942] bg-[#EEF7EA] px-4 py-3 text-sm font-semibold text-[#3F7D2A] shadow-sm transition hover:bg-[#E4F3DD] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isGenerating ? 'Generating...' : 'Generate grocery list'}
               </button>
@@ -676,7 +676,7 @@ export function GroceryBoard() {
           <button
             type="submit"
             disabled={isAddingManual}
-            className="rounded-full border border-border bg-white px-4 py-3 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-muted/20 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-full border border-[#72B942] bg-[#EEF7EA] px-4 py-3 text-sm font-semibold text-[#3F7D2A] transition hover:-translate-y-0.5 hover:bg-[#E4F3DD] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isAddingManual ? 'Adding...' : 'Add item'}
           </button>
@@ -742,9 +742,9 @@ export function GroceryBoard() {
             No pantry staples were detected from cooked meals for this week yet.
           </div>
         ) : (
-          <div className="rounded-[1.75rem] border border-[#D8EBCF] bg-white p-4">
-            <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#3F7D2A]">
-              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#EAF6E2] text-[10px] font-bold text-[#3F7D2A]">•</span>
+          <div className="rounded-[1.75rem] border border-[#D3C3AE] bg-white p-4">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#4F453B]">
+              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#F1EADF] text-[10px] font-bold text-[#4F453B]">•</span>
               Pantry staples used this week
             </div>
             <div className="flex flex-wrap gap-2">
