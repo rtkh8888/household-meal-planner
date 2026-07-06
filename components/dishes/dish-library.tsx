@@ -36,10 +36,14 @@ const CATEGORY_OPTIONS: Array<{ value: DishCategory; label: string }> = [
 const PANTRY_STAPLES = ['Soy sauce', 'Oyster sauce', 'Oil', 'Salt', 'Pepper', 'Sugar', 'Sesame oil', 'Cornstarch', 'Vinegar', 'Garlic powder'] as const;
 const TYPE_LABELS: Record<IngredientType, string> = { grocery: 'Grocery', pantry: 'Pantry', optional: 'Optional' };
 const TYPE_STYLES: Record<IngredientType, { card: string; active: string; pill: string }> = {
-  grocery: { card: 'bg-primary/12 border-primary/24', active: 'bg-primary/18 border-primary/35 text-foreground', pill: 'bg-primary/16 text-foreground' },
-  pantry: { card: 'bg-accent/26 border-accent/35', active: 'bg-accent/42 border-accent/50 text-foreground', pill: 'bg-accent/28 text-foreground' },
-  optional: { card: 'bg-secondary/14 border-secondary/24', active: 'bg-secondary/22 border-secondary/35 text-foreground', pill: 'bg-secondary/18 text-foreground' }
+  grocery: { card: 'bg-secondary/14 border-secondary/24', active: 'bg-secondary/22 border-secondary/35 text-secondary-foreground', pill: 'bg-secondary/18 text-secondary-foreground' },
+  pantry: { card: 'bg-muted border-border', active: 'bg-muted border-primary/18 text-foreground', pill: 'bg-muted text-muted-foreground' },
+  optional: { card: 'bg-white border-border', active: 'bg-secondary/14 border-secondary/24 text-secondary-foreground', pill: 'bg-white text-muted-foreground' }
 };
+
+const PREVIEW_INGREDIENT_PILL = 'rounded-full border border-[#C9E5BC] bg-[#EAF6E2] px-3 py-2 text-xs font-semibold text-[#2F6F22]';
+const TOTAL_COUNT_PILL = 'rounded-full border border-[#E5E7EB] bg-[#F3F4F6] px-3 py-1 text-xs font-semibold text-[#374151]';
+const MORE_PILL = 'rounded-full border border-[#E5E7EB] bg-white px-3 py-2 text-xs font-medium text-[#6B7280]';
 
 function createIngredientDraft(overrides?: Partial<IngredientDraft>): IngredientDraft {
   return { id: crypto.randomUUID(), name: '', ingredientType: 'grocery', ...overrides };
@@ -347,9 +351,9 @@ export function DishLibrary() {
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="rounded-full border border-border bg-muted px-3 py-2 text-xs font-semibold text-foreground">{dishes.length} dishes total</span>
-              <span className="rounded-full border border-primary/18 bg-primary/12 px-3 py-2 text-xs font-semibold text-foreground">{filteredDishes.length} showing</span>
-              <span className="rounded-full border border-secondary/40 bg-secondary/30 px-3 py-2 text-xs font-semibold text-foreground">Pantry-aware ingredients</span>
+              <span className={TOTAL_COUNT_PILL}>{dishes.length} dishes total</span>
+              <span className={TOTAL_COUNT_PILL}>{filteredDishes.length} showing</span>
+              
             </div>
 
             {loadError ? <p className="mt-4 text-sm text-danger">{loadError}</p> : null}
@@ -367,8 +371,6 @@ export function DishLibrary() {
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {filteredDishes.map((dish) => {
-                const pantryCount = dish.ingredients.filter((ingredient) => ingredient.ingredient_type === 'pantry').length;
-                const groceryCount = dish.ingredients.filter((ingredient) => ingredient.ingredient_type === 'grocery').length;
                 const category = getCategoryOption(dish.category as DishCategory | null);
                 const previewIngredients = dish.ingredients.slice(0, 3);
                 return (
@@ -376,23 +378,22 @@ export function DishLibrary() {
                     <div className="relative flex items-start justify-between gap-3">
                       <div><p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">{category?.label ?? 'Uncategorized'}</p><h3 className="mt-2 text-xl font-semibold text-foreground">{dish.name}</h3></div>
                       <div className="flex gap-2">
-                        <button type="button" onClick={() => openEditForm(dish)} className="rounded-full border border-border bg-white px-3 py-2 text-sm font-semibold text-foreground">Edit</button>
-                        <button type="button" onClick={() => handleDeleteDish(dish)} disabled={pendingDeleteId === dish.id} className="rounded-full border border-border bg-white px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:border-primary/30 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-60">{pendingDeleteId === dish.id ? 'Deleting...' : 'Delete'}</button>
+                        <button type="button" onClick={() => openEditForm(dish)} className="rounded-full border border-[#F5B83D] bg-[#FFF7E0] px-3 py-2 text-sm font-semibold text-[#8A5A00] transition hover:-translate-y-0.5">Edit</button>
+                        <button type="button" onClick={() => handleDeleteDish(dish)} disabled={pendingDeleteId === dish.id} className="rounded-full border border-[#E85D5D] bg-[#FFF0F0] px-3 py-2 text-sm font-semibold text-[#B42323] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60">{pendingDeleteId === dish.id ? 'Deleting...' : 'Delete'}</button>
                       </div>
                     </div>
-                    <div className="relative mt-4 flex flex-wrap gap-2"><span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-foreground">{dish.ingredients.length} ingredients</span><span className="rounded-full bg-secondary/30 px-3 py-1 text-xs font-semibold text-foreground">{groceryCount} grocery</span><span className="rounded-full bg-accent/45 px-3 py-1 text-xs font-semibold text-foreground">{pantryCount} pantry</span></div>
+                    <div className="relative mt-4 flex flex-wrap gap-2"><span className={TOTAL_COUNT_PILL}>{dish.ingredients.length} ingredients</span></div>
                     <div className="relative mt-4 flex flex-wrap gap-2">
                       {previewIngredients.length > 0 ? (
                         previewIngredients.map((ingredient) => {
-                          const typeStyle = TYPE_STYLES[ingredient.ingredient_type as IngredientType];
                           return (
-                            <span key={ingredient.id} className={`rounded-full border px-3 py-2 text-xs font-medium ${typeStyle.pill}`}>
+                            <span key={ingredient.id} className={PREVIEW_INGREDIENT_PILL}>
                               {ingredient.name}
                             </span>
                           );
                         })
                       ) : (
-                        <span className="rounded-full border border-dashed border-border bg-muted/30 px-3 py-2 text-xs font-medium text-muted-foreground">
+                        <span className={PREVIEW_INGREDIENT_PILL}>
                           No ingredients yet
                         </span>
                       )}
@@ -400,9 +401,8 @@ export function DishLibrary() {
                     {expandedDishIds.has(dish.id) && dish.ingredients.length > 3 ? (
                       <div className="relative mt-3 flex flex-wrap gap-2">
                         {dish.ingredients.slice(3).map((ingredient) => {
-                          const typeStyle = TYPE_STYLES[ingredient.ingredient_type as IngredientType];
                           return (
-                            <span key={ingredient.id} className={`rounded-full border px-3 py-2 text-xs font-medium ${typeStyle.pill}`}>
+                            <span key={ingredient.id} className={PREVIEW_INGREDIENT_PILL}>
                               {ingredient.name}
                             </span>
                           );
@@ -414,7 +414,7 @@ export function DishLibrary() {
                         <button
                           type="button"
                           onClick={() => toggleExpandedDish(dish.id)}
-                          className="rounded-full border border-border bg-white px-3 py-2 text-xs font-medium text-muted-foreground transition hover:-translate-y-0.5 hover:text-foreground"
+                          className={MORE_PILL}
                         >
                           {expandedDishIds.has(dish.id) ? 'Show less' : `+${dish.ingredients.length - 3} more`}
                         </button>
@@ -437,7 +437,7 @@ export function DishLibrary() {
                 <h2 className="mt-2 text-lg font-semibold text-foreground">{formState.id ? 'Edit dish' : 'Create a new dish'}</h2>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">Bulk input first, then adjust the chips if you need to fine-tune types.</p>
               </div>
-              <button type="button" onClick={closeEditor} className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground">Close</button>
+              <button type="button" onClick={closeEditor} className="rounded-full border border-[#E85D5D] bg-[#FFF0F0] px-4 py-2 text-sm font-semibold text-[#B42323] transition hover:-translate-y-0.5">Close</button>
             </div>
 
             <form onSubmit={handleSaveDish} className="mt-5 space-y-5">
@@ -454,7 +454,7 @@ export function DishLibrary() {
 
                 <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
                   <label className="block text-sm"><span className="mb-1 block font-medium text-foreground">Bulk ingredient input</span><textarea value={bulkIngredientsText} onChange={(e) => setBulkIngredientsText(e.target.value)} rows={7} placeholder={`Add ingredients, one per line...\n\nExample:\nPork\nGarlic\nBroccoli\nSoy sauce\nOyster sauce`} className="w-full rounded-[1.4rem] border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" /><p className="mt-2 text-xs leading-5 text-muted-foreground">Grocery is the default type when you convert lines into ingredient chips.</p></label>
-                  <div className="rounded-[1.4rem] border border-border bg-white p-4"><p className="text-sm font-semibold text-foreground">Common pantry staples</p><div className="mt-3 flex flex-wrap gap-2">{PANTRY_STAPLES.map((staple) => <button key={staple} type="button" onClick={() => addPantryStaple(staple)} className="rounded-full border border-border bg-accent/30 px-3 py-2 text-xs font-semibold text-foreground transition hover:-translate-y-0.5 hover:bg-accent/45">{staple}</button>)}</div></div>
+                  <div className="rounded-[1.4rem] border border-border bg-white p-4"><p className="text-sm font-semibold text-foreground">Common pantry staples</p><div className="mt-3 flex flex-wrap gap-2">{PANTRY_STAPLES.map((staple) => <button key={staple} type="button" onClick={() => addPantryStaple(staple)} className="rounded-full border border-border bg-muted px-3 py-2 text-xs font-semibold text-foreground transition hover:-translate-y-0.5 hover:bg-muted">{staple}</button>)}</div></div>
                 </div>
 
                 <div className="mt-4">
@@ -494,6 +494,14 @@ export function DishLibrary() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
 
 
 

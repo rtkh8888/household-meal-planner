@@ -13,37 +13,6 @@ type AppShellProps = {
   children: ReactNode;
 };
 
-function MealPlannerLogo() {
-  return (
-    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(200,220,200,0.32))] shadow-[0_12px_24px_rgba(90,60,70,0.08)]">
-      <svg viewBox="0 0 48 48" className="h-7 w-7 text-primary" fill="none" aria-hidden="true">
-        <path
-          d="M14.5 24.5C14.5 17.6 19.8 12 26.4 12c4.8 0 8.9 2.9 10.8 7"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M13 26h22.5c0 5.9-5.6 10.7-12.6 10.7S13 31.9 13 26Z"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M25.2 14.4c1.3 1.4 1.7 3 1.1 4.4-.5 1.1-1.6 1.8-2.8 2.4-.7-1.2-1.3-2.5-1.1-3.8.2-1.6 1.2-2.6 2.8-3Z"
-          fill="currentColor"
-          opacity="0.88"
-        />
-        <path
-          d="M20.2 16.2c.9 1 .9 2.3.1 3.2-.4.5-1 .8-1.7 1.1-.4-.8-.6-1.7-.4-2.5.2-1 .8-1.6 2-1.8Z"
-          fill="currentColor"
-          opacity="0.58"
-        />
-      </svg>
-    </div>
-  );
-}
-
 function NavPill({
   href,
   label,
@@ -66,7 +35,7 @@ function NavPill({
       } ${
         active
           ? 'border-secondary/75 bg-secondary/45 text-foreground shadow-[0_10px_22px_rgba(234,199,199,0.12)]'
-          : 'border-border bg-white/90 text-muted-foreground hover:-translate-y-0.5 hover:border-primary/35 hover:bg-white hover:text-foreground hover:shadow-[0_12px_24px_rgba(90,60,70,0.07)]'
+          : 'border-border bg-white/90 text-muted-foreground hover:-translate-y-0.5 hover:border-primary/35 hover:bg-white hover:text-foreground hover:shadow-[0_12px_24px_rgba(31,41,51,0.07)]'
       }`}
     >
       {compact ? shortLabel : label}
@@ -86,8 +55,7 @@ export function AppShell(props: AppShellProps) {
       <header className="sticky top-0 z-20 border-b border-border bg-[rgba(255,255,255,0.88)] backdrop-blur-md">
         <div className="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-start gap-3">
-              <MealPlannerLogo />
+            <div className="flex items-start">
               <div>
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Household Meal Planner
@@ -175,5 +143,14 @@ export function AppShell(props: AppShellProps) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
 
 

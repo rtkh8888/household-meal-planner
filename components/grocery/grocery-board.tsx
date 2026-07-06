@@ -593,31 +593,31 @@ export function GroceryBoard() {
         <div className="overflow-hidden rounded-[2rem] border border-border bg-white/95 p-5 shadow-[0_12px_34px_rgba(90,60,70,0.06)] sm:p-6">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#D8EBCF] bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#3F7D2A]">
                 <span className="h-2 w-2 rounded-full bg-primary" />
                 Grocery week
               </div>
               <div className="mt-4 flex flex-wrap items-start gap-3">
-                <div className="rounded-[1.5rem] border border-border bg-[linear-gradient(135deg,rgba(244,175,192,0.18),rgba(220,210,243,0.18))] px-5 py-4">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Week range</p>
-                  <p className="mt-2 text-2xl font-semibold text-foreground">{formatWeekRange(weekStartDate)}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">Generated from cooked meals only</p>
+                <div className="rounded-[1.5rem] border border-[#D8EBCF] bg-white px-5 py-4">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#3F7D2A]">Week range</p>
+                  <p className="mt-2 text-2xl font-semibold text-[#1F2933]">{formatWeekRange(weekStartDate)}</p>
+                  <p className="mt-1 text-sm text-[#6B7280]">Generated from cooked meals only</p>
                 </div>
                 <div className="grid min-w-[220px] flex-1 grid-cols-3 gap-3 sm:min-w-[280px]">
-                  <div className="rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(220,207,252,0.42),rgba(255,255,255,0.92))] px-4 py-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Main</p>
-                    <p className="mt-2 text-2xl font-semibold text-foreground">{totalMainItems}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">shopping items</p>
+                  <div className="rounded-[1.35rem] border border-[#D8EBCF] bg-white px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3F7D2A]">Main</p>
+                    <p className="mt-2 text-2xl font-semibold text-[#1F2933]">{totalMainItems}</p>
+                    <p className="mt-1 text-xs text-[#6B7280]">shopping items</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(191,220,203,0.42),rgba(255,255,255,0.92))] px-4 py-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Pantry</p>
-                    <p className="mt-2 text-2xl font-semibold text-foreground">{totalPantryItems}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">staples</p>
+                  <div className="rounded-[1.35rem] border border-[#D8EBCF] bg-white px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3F7D2A]">Pantry</p>
+                    <p className="mt-2 text-2xl font-semibold text-[#1F2933]">{totalPantryItems}</p>
+                    <p className="mt-1 text-xs text-[#6B7280]">staples</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(248,237,184,0.5),rgba(255,255,255,0.92))] px-4 py-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Checked</p>
-                    <p className="mt-2 text-2xl font-semibold text-foreground">{checkedCount}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">done</p>
+                  <div className="rounded-[1.35rem] border border-[#D8EBCF] bg-white px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3F7D2A]">Checked</p>
+                    <p className="mt-2 text-2xl font-semibold text-[#1F2933]">{checkedCount}</p>
+                    <p className="mt-1 text-xs text-[#6B7280]">done</p>
                   </div>
                 </div>
               </div>
@@ -742,9 +742,9 @@ export function GroceryBoard() {
             No pantry staples were detected from cooked meals for this week yet.
           </div>
         ) : (
-          <div className="rounded-[1.75rem] border border-border bg-[linear-gradient(135deg,rgba(255,241,214,0.38),rgba(255,255,255,0.96))] p-4">
-            <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
-              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary">•</span>
+          <div className="rounded-[1.75rem] border border-[#D8EBCF] bg-white p-4">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#3F7D2A]">
+              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#EAF6E2] text-[10px] font-bold text-[#3F7D2A]">•</span>
               Pantry staples used this week
             </div>
             <div className="flex flex-wrap gap-2">
@@ -754,9 +754,6 @@ export function GroceryBoard() {
                 </span>
               ))}
             </div>
-            <p className="mt-3 text-xs leading-5 text-muted-foreground">
-              These staples were pulled from cooked meal ingredients and grouped separately so the main checklist stays easy to scan.
-            </p>
           </div>
         )}
       </PageSection>
@@ -764,6 +761,9 @@ export function GroceryBoard() {
     </div>
   );
 }
+
+
+
 
 
 

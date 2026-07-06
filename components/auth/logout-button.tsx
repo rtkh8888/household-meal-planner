@@ -37,7 +37,7 @@ export function LogoutButton({ className = '' }: LogoutButtonProps) {
         type="button"
         onClick={handleLogout}
         disabled={isSigningOut}
-        className={`rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-lavender/40 hover:bg-white hover:shadow-[0_10px_20px_rgba(90,60,70,0.08)] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+        className={`rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-primary/35 hover:bg-white hover:shadow-[0_10px_20px_rgba(31,41,51,0.08)] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
       >
         {isSigningOut ? 'Signing out...' : 'Log out'}
       </button>
@@ -45,3 +45,4 @@ export function LogoutButton({ className = '' }: LogoutButtonProps) {
     </div>
   );
 }
+
