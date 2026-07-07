@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
@@ -171,6 +171,9 @@ export function PlannerBoard() {
     () => (showBreakfast ? MEAL_TYPES : DEFAULT_VISIBLE_MEAL_TYPES),
     [showBreakfast]
   );
+
+  const dishes = data?.dishes ?? [];
+  const hasDishes = dishes.length > 0;
 
   const slotsByDay = useMemo(() => {
     const map = new Map<string, PlannerSlot[]>();
@@ -423,7 +426,11 @@ export function PlannerBoard() {
   }, [weekStartDate, loadPlannerData]);
 
   function openAddMeal(date: string, mealType: MealTypeOption) {
-    const defaults = data?.household;
+    if (!data) {
+      return;
+    }
+
+    const defaults = data.household;
     const nextSlot = getNextMealSlot(date, mealType);
 
     setEditingSlotId(null);
@@ -1065,7 +1072,7 @@ export function PlannerBoard() {
           <button
             type="button"
             onClick={() => openAddMeal(day.isoDate, mealType)}
-            disabled={data.dishes.length === 0}
+            disabled={!hasDishes}
             className="rounded-full border border-[#72B942] bg-[#EEF7EA] px-4 py-2 text-sm font-semibold text-[#3F7D2A] transition hover:-translate-y-0.5 hover:bg-[#E4F3DD] disabled:cursor-not-allowed disabled:opacity-60"
           >
             Add meal
@@ -1196,7 +1203,7 @@ export function PlannerBoard() {
             Show breakfast
           </label>
         </div>
-        {data.dishes.length === 0 ? (
+        {!hasDishes ? (
           <div className="mt-5 rounded-3xl border border-dashed border-border bg-muted/25 p-5 text-sm leading-6 text-muted-foreground">
             Add dishes first to build out the weekly planner.
             <div className="mt-4">
@@ -1301,13 +1308,13 @@ export function PlannerBoard() {
                       </p>
                     </div>
 
-                    {data.dishes.length === 0 ? (
+                    {!hasDishes ? (
                       <div className="mt-4 rounded-2xl border border-dashed border-border bg-muted/30 px-4 py-4 text-sm text-muted-foreground">
                         Add dishes first to build a planner meal.
                       </div>
                     ) : (
                       <div className="mt-4 space-y-3">
-                        {data.dishes.map((dish) => {
+                        {dishes.map((dish) => {
                           const isSelected = formState.selectedDishIds.includes(dish.id);
                           return (
                             <label
