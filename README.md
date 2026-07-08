@@ -52,26 +52,6 @@ This project solves that by connecting the full flow in one household-aware app.
 - Supabase Row Level Security
 - Vercel-ready deployment
 
-## Screenshots
-
-Add screenshots to `public/screenshots/` and link them here for GitHub and portfolio use.
-
-Suggested images:
-
-- `public/screenshots/dashboard.png`
-- `public/screenshots/dishes.png`
-- `public/screenshots/planner.png`
-- `public/screenshots/grocery.png`
-
-Example layout:
-
-```md
-![Dashboard](public/screenshots/dashboard.png)
-![Dishes](public/screenshots/dishes.png)
-![Planner](public/screenshots/planner.png)
-![Groceries](public/screenshots/grocery.png)
-```
-
 ## Database Model Summary
 
 The Supabase schema is organized around a household-owned workflow:
@@ -208,3 +188,5 @@ This project is ready to deploy on Vercel.
 ## License
 
 No license has been specified yet.
+
+
